@@ -1,0 +1,4 @@
+@use 'sass:math';
+@function pxtorem($px-value, $base-font-size: 16) {
+  @return math.div($px-value, $base-font-size) + rem;
+}

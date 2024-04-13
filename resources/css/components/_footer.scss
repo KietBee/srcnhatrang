@@ -1,0 +1,16 @@
+.info a {
+  @apply hover:text-primary-100;
+}
+
+.footer-menu a {
+  @apply hover:text-primary-200;
+}
+
+.social-footer {
+  ul {
+    @apply gap-6;
+    i {
+      @apply text-xl text-primary-200 hover:text-primary-300;
+    }
+  }
+}

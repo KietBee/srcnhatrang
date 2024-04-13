@@ -1,0 +1,27 @@
+.mod-testimonial-carousel {
+  .swiper-button-prev,
+  .swiper-button-next {
+    @apply static text-primary-200 font-bold hover:text-primary-100;
+  }
+}
+
+.content-left {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply capitalize leading-snug md:leading-normal 2xl:text-h3-2xl 2xl:mb-[23px];
+  }
+
+  p {
+    @apply text-sm font-normal text-[#333333];
+  }
+}
+
+.card {
+  p {
+    @apply font-bold;
+  }
+}
