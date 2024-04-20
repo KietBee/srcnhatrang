@@ -1,6 +1,93 @@
 @extends('admin.layouts.admin')
 
 @section('content')
+<section class="bg-gray-50 dark:bg-gray-900 py-3 xl:py-5">
+    <x-admin.alerts :messages="session('error')" :error="true" />
+    <x-admin.alerts :messages="session('success')" :error="false" />
+    <div class="mx-auto">
+        <div class="bg-white shadow rounded-lg p-6 grid grid-cols-2 xl:grid-cols-12 gap-6 px-4">
+            <div class="bg-white shadow xl:rounded-lg flex flex-col items-center col-span-4 xl:col-span-4">
+                <img src="https://randomuser.me/api/portraits/men/94.jpg" class="w-32 h-32 bg-gray-300 rounded-full mb-4 shrink-0">
+
+                </img>
+                <h3 class="text-xl font-bold">{{ $user->first_name.' '.$user->last_name }}</h3>
+                <p class="text-gray-700">{{$user->email }}</p>
+            </div>
+            <div class="flex flex-col col-span-4 xl:col-span-8">
+                <div class="p-4 xl:p-8 bg-white shadow xl:rounded-lg">
+                    <div class="max-w-xl">
+                        <form method="POST" action="{{ route('admin.user.update', ['id' => $user->id]) }}" class="p-4 md:p-5">
+                            @csrf
+                            @method('patch')
+                                <div class="grid gap-4 mb-4 grid-cols-2">
+                                    <div class="col-span-2 sm:col-span-1">
+                                        <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Họ</label>
+                                        <input type="text" name="firstName" id="first_name" value="{{ $user->first_name }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Nhập họ" required="">
+                                        <x-input-error :messages="$errors->get('firstName')" class="mt-2" />
+                                    </div>
+                                    <div class="col-span-2 sm:col-span-1">
+                                        <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên</label>
+                                        <input type="text" name="lastName" id="last_name" value="{{ $user->last_name }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Nhập tên" required="">
+                                        <x-input-error :messages="$errors->get('lastName')" class="mt-2" />
+                                    </div>
+                                    <div class="grid gap-4 mb-4 col-span-2 grid-cols-3">
+                                        <div class="col-span-1">
+                                            <label for="province" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tỉnh/Thành phố</label>
+                                            <select required name="province" id="province" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                <option value="">Chọn Tỉnh/Thành phố</option>
+                                                @foreach ($provinces as $province)
+                                                    <option value="{{ $province->id }}" {{ $user->userAddress->district->province->id == $province->id ? 'selected' : '' }}>
+                                                        {{ $province->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-span-1">
+                                            <label for="district" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quận/Huyện</label>
+                                            <select required name="district" id="district" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                <option value="">Chọn Quận/Huyện</option>
+                                                @foreach ($districts as $district)
+                                                    <option value="">Chọn Quận/Huyện</option>
+                                                    <option value="{{ $district->id }}" {{ $user->userAddress->district->id == $district->id ? 'selected' : '' }}>
+                                                        {{ $district->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-span-1">
+                                            <label for="ward" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phường/Xã</label>
+                                            <select required name="ward" id="ward" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                <option value="">Chọn Phường/Xã</option>
+                                                @foreach ($wards as $ward)
+                                                    <option value="">Chọn Quận/Huyện</option>
+                                                    <option value="{{ $ward->id }}" {{ $user->userAddress->id == $ward->id ? 'selected' : '' }}>
+                                                        {{ $ward->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-span-3">
+                                            <label for="address_description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên đường/Số nhà</label>
+                                            <textarea id="address_description" name="addressDescription" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">{{ $user->address_description }}</textarea>                    
+                                            <x-input-error :messages="$errors->get('addressDescription')" class="mt-2" />
+                                        </div>
+                                    </div>
+                                </div>                                         
+                            <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                                Cập nhật tài khoản
+                            </button>
+                            <a href="{{ route('admin.user') }}" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                                Hủy
+                            </a>
+                        </form> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {{-- <body class="font-sans antialiased text-gray-900 leading-normal tracking-wider bg-cover"
     style="background-image:url('https://source.unsplash.com/1L71sPT5XKc');">
 
@@ -13,7 +100,7 @@
             class="w-full lg:w-3/5 rounded-lg lg:rounded-l-lg lg:rounded-r-none shadow-2xl bg-white opacity-75 mx-6 lg:mx-0 dark:bg-gray-900 dark:text-white duration-500">
 
 
-            <div class="p-4 md:p-12 text-center lg:text-left">
+            <div class="p-4 xl:p-12 text-center lg:text-left">
                 <!-- Image for mobile view-->
                 <div class="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center"
                     style="background-image: url('https://source.unsplash.com/MP0IUfwrn0A')"></div>
@@ -27,14 +114,14 @@
                             d="M9 12H1v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-8v2H9v-2zm0-1H0V5c0-1.1.9-2 2-2h4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v6h-9V9H9v2zm3-8V2H8v1h4z" />
                     </svg> What you do
                 </p>
-                <p class="pt-2 text-gray-600 text-xs lg:text-sm flex items-center justify-center lg:justify-start">
+                <p class="pt-2 text-gray-600 text-xs lg:text-xl flex items-center justify-center lg:justify-start">
                     <svg class="h-4 fill-current text-green-700 pr-4" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20">
                         <path
                             d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm7.75-8a8.01 8.01 0 0 0 0-4h-3.82a28.81 28.81 0 0 1 0 4h3.82zm-.82 2h-3.22a14.44 14.44 0 0 1-.95 3.51A8.03 8.03 0 0 0 16.93 14zm-8.85-2h3.84a24.61 24.61 0 0 0 0-4H8.08a24.61 24.61 0 0 0 0 4zm.25 2c.41 2.4 1.13 4 1.67 4s1.26-1.6 1.67-4H8.33zm-6.08-2h3.82a28.81 28.81 0 0 1 0-4H2.25a8.01 8.01 0 0 0 0 4zm.82 2a8.03 8.03 0 0 0 4.17 3.51c-.42-.96-.74-2.16-.95-3.51H3.07zm13.86-8a8.03 8.03 0 0 0-4.17-3.51c.42.96.74 2.16.95 3.51h3.22zm-8.6 0h3.34c-.41-2.4-1.13-4-1.67-4S8.74 3.6 8.33 6zM3.07 6h3.22c.2-1.35.53-2.55.95-3.51A8.03 8.03 0 0 0 3.07 6z" />
                     </svg> Your Location - 25.0000° N, 71.0000° W
                 </p>
-                <p class="pt-8 text-sm">Totally optional short description about yourself, what you do and so on.</p>
+                <p class="pt-8 text-xl">Totally optional short description about yourself, what you do and so on.</p>
 
                 <div class="pt-12 pb-8">
                     <button class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-full">
@@ -117,25 +204,4 @@
     </div>
 
 </body> --}}
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <div class="max-w-xl">
-                @include('admin.profile.partials.update-profile-information-form')
-            </div>
-        </div>
-
-        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <div class="max-w-xl">
-                @include('admin.profile.partials.update-password-form')
-            </div>
-        </div>
-
-        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <div class="max-w-xl">
-                @include('admin.profile.partials.delete-user-form')
-            </div>
-        </div>
-    </div>
-</div>
 @endsection

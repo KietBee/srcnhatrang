@@ -21,8 +21,12 @@ class UserType extends Model
         'user_type_name',
     ];
 
-    public function user()
+    public static function getAllUserTypes() {
+        return self::all();
+    }    
+
+    public function users()
     {
-        return $this->hasMany(User::class,  'user_type_id');
-    }
+        return $this->hasMany(User::class, 'user_type_id');
+    }    
 }

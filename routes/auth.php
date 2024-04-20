@@ -14,8 +14,6 @@ use App\Http\Controllers\AddressController;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create',])->name('register');
-    Route::get('districts/{province_id}', [AddressController::class, 'getDistricts'])->name('districts');
-    Route::get('wards/{district_id}', [AddressController::class, 'getWards'])->name('wards');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 

@@ -8,12 +8,13 @@ use App\Http\Controllers\Admin\DashBoardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PetController;
 use App\Http\Controllers\Admin\SpecieController;
+use App\Http\Controllers\AddressController;
 
 Route::get('/', function () {
     return view('index');
 });
-
-
+Route::get('districts/{province_id}', [AddressController::class, 'getDistricts'])->name('districts');
+Route::get('wards/{district_id}', [AddressController::class, 'getWards'])->name('wards');
 
 Route::get('send-email', function () {
     Mail::to('hien37211@gmail.com')->send(new NotifyMail());
@@ -26,12 +27,6 @@ Route::get('send-email', function () {
 
 Route::get('/home', [DashBoardController::class, 'index'])->middleware('auth')->name('home');
 
-Route::get('post', [DashBoardController::class, 'post'])->middleware(['auth', 'admin']);
-Route::get('user', [UserController::class, 'getAllUser'])->middleware(['auth', 'admin']);
-Route::get('pet', [PetController::class, 'getAllPet'])->middleware(['auth', 'admin'])->name('admin.pet');
-Route::get('pet/{id}', [PetController::class, 'getDetailPet'])->middleware(['auth', 'admin'])->name('admin.detail-pet');
-Route::get('/user/{id}', [UserController::class, 'getDetailUser'])->name('admin.detail-user');
-Route::get('specie', [SpecieController::class, 'getAllSpecie'])->middleware(['auth', 'admin'])->name('admin.specie');
 // dd(Route::get('post', [DashBoardController::class, 'post'])->middleware(['auth', 'admin']));
 
 Route::middleware('auth')->group(function () {
@@ -41,3 +36,5 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+require __DIR__.'/admin.php';

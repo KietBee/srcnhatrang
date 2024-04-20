@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $primaryKey = 'id';
 
@@ -52,10 +53,60 @@ class User extends Authenticatable
 
     public function userAddress()
     {
-        return $this->belongsTo(ward::class, 'address_id');
+        return $this->belongsTo(Ward::class, 'address_id');
     }
 
-    public static function getAllDataUsers($paginate) {
-        return self::paginate($paginate);
-    }    
+    public function markEmailAsVerified()
+    {
+        $this->email_verified_at = now();
+        $this->save();
+    }
+
+    public static function search($query)
+    {
+        return self::where(function ($q) use ($query) {
+            $q->where('id', 'like', "%$query%")
+                ->orWhere('first_name', 'like', "%$query%")
+                ->orWhere('last_name', 'like', "%$query%")
+                ->orWhere('email', 'like', "%$query%")
+                ->orWhere('phone_number', 'like', "%$query%");
+        });
+    }
+
+    public static function getAllDataUsers($currentPage, $paginate, $sortBy = 'id', $sortDirection = 'asc', $search = '', $userType = [])
+    {
+        // Tạo một đối tượng User từ phương thức query()
+        $query = self::query();
+
+        if ($search !== '') {
+            // Gọi phương thức search() trên đối tượng User đã tạo
+            $query = self::search($search);
+        }
+
+        if (is_string($userType)) {
+            // Nếu là chuỗi, chuyển đổi thành mảng
+            $userType = [$userType];
+        }
+        
+        // Lọc dữ liệu theo user_type_id nếu $userType không rỗng
+        if (!empty($userType)) {
+            $query->whereIn('user_type_id', $userType);
+        }
+
+        $total = $query->count();
+
+        // Gọi orderBy() và paginate() trên đối tượng User đã tạo
+        $query->orderBy($sortBy, $sortDirection);
+        $result = $query->paginate($paginate, ['*'], 'page', $currentPage);
+
+        // Trả về kết quả cùng với tổng số bản ghi
+        return [
+            'data' => $result,
+            'total' => $total,
+        ];
+    }
+
+
+    
 }
+

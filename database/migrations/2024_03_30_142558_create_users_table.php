@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('phone_number')->unique();
-            $table->bigInteger('address_id')->unsigned();
+            $table->string('phone_number')->unique()->nullable();
+            $table->bigInteger('address_id')->unsigned()->nullable();
             $table->string('address_description')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->rememberToken()->nullable();
             $table->timestamp('login_at')->nullable();
             $table->timestamp('change_password_at')->nullable();
             $table->timestamps();

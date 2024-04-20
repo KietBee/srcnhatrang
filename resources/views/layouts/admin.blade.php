@@ -41,7 +41,7 @@
         class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden"
       >
         <!-- ===== Header Start ===== -->
-        @include('admin.components.header')
+        {{-- @include('admin.components.header') --}}
         <!-- ===== Header End ===== -->
 
         <!-- ===== Main Content Start ===== -->

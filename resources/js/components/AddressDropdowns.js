@@ -1,14 +1,13 @@
 class AddressDropdowns {
     constructor() {
         this.$province = $('#province')
-        this.$district = $('#district')
-        this.$ward = $('#ward')
         this.bindProvinceChange = this.bindProvinceChange.bind(this)
         this.bindDistrictChange = this.bindDistrictChange.bind(this)
     }
 
     init() {
-        console.log('init')
+        this.$district = $('#district')
+        this.$ward = $('#ward')
         this.bindProvinceChange()
         this.bindDistrictChange()
     }
@@ -16,7 +15,7 @@ class AddressDropdowns {
     bindProvinceChange() {
         this.$province.change(() => {
             const province_id = this.$province.val()
-            if (province_id) {
+            if (province_id !== "") {
                 $.ajax({
                     type: "GET",
                     url: "/districts/" + province_id,
@@ -29,12 +28,16 @@ class AddressDropdowns {
                             })
                         } else {
                             this.$district.empty()
+                            this.$district.append('<option value="">Chọn Quận/Huyện</option>')
                         }
                     }
                 })
             } else {
                 this.$district.empty()
+                this.$district.append('<option value="">Chọn Quận/Huyện</option>')
             }
+            this.$ward.empty()
+            this.$ward.append('<option value="">Chọn Phường/Xã</option>')
         })
     }
 
@@ -54,11 +57,13 @@ class AddressDropdowns {
                             })
                         } else {
                             this.$ward.empty()
+                            this.$ward.append('<option value="">Chọn Phường/Xã</option>')
                         }
                     }
                 })
             } else {
                 this.$ward.empty()
+                this.$ward.append('<option value="">Chọn Phường/Xã</option>')
             }
         })
     }

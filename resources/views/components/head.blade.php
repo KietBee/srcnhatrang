@@ -23,6 +23,7 @@
   <link href="https://cdnjs.cloudflare.com" rel="dns-prefetch" crossorigin>
   <link href="https://cdnjs.cloudflare.com" rel="preconnect" crossorigin>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" rel="preload" as="script">
   <link href='resources/assets/scripts/app-mobile.js' media="(max-width: 991px)" rel="preload" as="script">
   <link href='resources/assets/scripts/app-desktop.js' media="(min-width: 992px)" rel="preload" as="script">
@@ -31,4 +32,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <link rel="stylesheet" id="sage/font-css" onload="if(media!='screen')media='screen'" href='@asset("styles/print.scss")' type="text/css" media="print" />
   @vite(['resources/css/app.scss', 'resources/js/app.js'])
+  <script>
+    function toggleDarkMode() {
+      var htmlElement = document.querySelector('html');
+      htmlElement.classList.toggle('dark');
+    }
+
+                   // Kiểm tra xem trạng thái dark mode đã được lưu trong Local Storage chưa
+    if (localStorage.getItem('darkMode') === 'true') {
+    // Nếu có, thêm lớp 'dark' vào thẻ html
+    document.documentElement.classList.add('dark');
+    }
+
+    // Hàm để toggle trạng thái dark mode và lưu vào Local Storage
+    function toggleDarkMode() {
+    var htmlElement = document.documentElement;
+    var isDarkMode = htmlElement.classList.toggle('dark');
+    
+    // Lưu trạng thái dark mode vào Local Storage
+    localStorage.setItem('darkMode', isDarkMode);
+    }
+
+    // Kiểm tra sự kiện khi trang được tải
+    window.onload = function() {
+    // Kiểm tra trạng thái dark mode lưu trong Local Storage
+    if (localStorage.getItem('darkMode') === 'true') {
+       // Nếu có, thêm lớp 'dark' vào thẻ html
+       document.documentElement.classList.add('dark');
+    }
+    };
+
+ </script>
 </head>

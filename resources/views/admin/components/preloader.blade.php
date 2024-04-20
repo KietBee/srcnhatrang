@@ -7,4 +7,6 @@
   <div
     class="h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary-400 border-t-transparent"
   ></div>
+  <img src="{{ asset('images/giphy.webp') }}" alt="">
 </div>
+
