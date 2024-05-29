@@ -1,0 +1,19 @@
+.mod-slider-content {
+  .swiper-pagination-bullet {
+    @apply border-2;
+  }
+
+  .swiper-pagination {
+    @apply w-min bottom-auto left-auto right-0 md:top-[57px] 2xl:bottom-26 2xl:right-[31px] 2xl:top-auto;
+  }
+
+  .slider-content {
+    p {
+      @apply 2xl:pr-41;
+    }
+  }
+}
+
+.mask {
+  background: linear-gradient(161deg, rgba(27, 59, 47, 0) 48.91%, rgb(44, 64, 47) 95.77%);
+}

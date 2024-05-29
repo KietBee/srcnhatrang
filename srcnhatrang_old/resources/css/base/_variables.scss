@@ -1,0 +1,40 @@
+:root,
+#root {
+  --primary-100: #5B7E71;
+  --primary-200: #A5B9B4;
+  --primary-300: #F1F5F8;
+  --primary-400: #1B3B2F;
+  --primary-500: #FFF;
+  --secondary-100: #6AB3CB;
+  --secondary-200: #F5F8FB;
+  --secondary-300: #707070;
+  --secondary-400: #F8F9F9;
+  --secondary-500: #430d12;
+  --tertiary-100: #F85847;
+  --tertiary-200: #5C068C;
+  --tertiary-300: #40A829;
+  --tertiary-400: #8CDF7A;
+  --tertiary-500: #CCC;
+  --states-100: #f2342b;
+  --states-200: #ffaa29;
+  --states-300: #66bd50;
+  --gray-100: #f0f1f3;
+  --gray-200: #F1F5F8;
+  --gray-300: #E2E2E2;
+  --gray-400: #6a7682;
+  --gray-500: #353b41;
+  --black: #000;
+  --white: #fff;
+  --transparent: transparent;
+  // --swiper-pagination-bottom: 10px;
+  --swiper-pagination-top: 64px;
+  --swiper-pagination-bullet-inactive-opacity: 1;
+  --swiper-pagination-bullet-horizontal-gap: 6.5px;
+  --swiper-pagination-bullet-inactive-color: none;
+  --swiper-pagination-bullet-width: var(--swiper-pagination-bullet-size, 12px);
+  --swiper-pagination-bullet-height: var(--swiper-pagination-bullet-size, 12px);
+  --swiper-navigation-size: 23px;
+  --swiper-theme-color:var(--primary-300);
+}
+
+$themeColor: var(--primary-100) !default;

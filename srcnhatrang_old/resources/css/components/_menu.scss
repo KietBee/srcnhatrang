@@ -1,0 +1,110 @@
+.hamburger-menu {
+  @apply p-0 mt-0 cursor-pointer;
+  .icon-bar {
+    @apply block bg-white relative ml-auto w-17 h-2;
+    + .icon-bar {
+      @apply mt-3;
+    }
+  }
+
+  .icomoon {
+    @apply hidden leading-none text-white;
+  }
+
+  &.is-open-menu {
+    .icomoon {
+      @apply block;
+    }
+
+    .icon-bar {
+      @apply hidden;
+    }
+  }
+}
+
+.main-menu {
+  .icomoon {
+    transition: all 0.25s;
+  }
+}
+
+.icon-arrow-menu {
+  @apply text-xl lg:text-base;
+}
+
+@screen lg {
+  .main-menu-dropdown {
+    visibility: hidden;
+    transition: 0.2s ease all;
+    transition-delay: 0.2s;
+    box-shadow: 0 44px 32px -34px rgba(0, 0, 0, 0.1);
+    transform: translateY(10px);
+  }
+  .menu-item {
+    &.hovering {
+      @apply z-1;
+      .main-link,
+      .icomoon {
+        @apply text-primary-100;
+      }
+
+      ul > li:last-child {
+        @apply border-none;
+      }
+
+      li {
+        @apply hover:bg-primary-100;
+      }
+
+      li > a {
+        @apply text-primary-400;
+      }
+
+      li:hover > a {
+        @apply text-white;
+      }
+
+      .main-menu-dropdown {
+        @apply pointer-events-auto opacity-100 visible;
+        transform: translateY(0);
+        transition: 0.2s ease all;
+      }
+
+      .icomoon {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
+@screen down_lg {
+  .main-menu {
+    @apply max-h-0 overflow-scroll block w-full;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%);
+    &.is-open-menu {
+      @apply max-h-2k bg-primary-400 py-21 px-12 text-xl font-medium md:px-24 md:text-h4;
+      transform: translateX(0);
+      transition: transform 0.3s ease-in-out;
+      .dropdown-menu > ul {
+        @apply flex flex-col gap-[19px] pt-11 font-sans text-lg font-normal md:pt-11 md:gap-[23px] 2xl:text-base;
+      }
+    }
+    &.is-closing-menu {
+      transform: translateX(-100%);
+    }
+  }
+  .is-open-child {
+    .main-menu-dropdown {
+      @apply block;
+    }
+    button[aria-expanded='true'] {
+      .icomoon {
+        transform: rotate(180deg);
+      }
+      .icon-arrow-menu {
+        @apply my-0;
+      }
+    }
+  }
+}

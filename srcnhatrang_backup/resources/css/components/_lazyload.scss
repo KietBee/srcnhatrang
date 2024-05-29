@@ -1,0 +1,4 @@
+img.lazy {
+  @apply m-0 mx-auto opacity-0 block invisible;
+  max-height: 1px;
+}

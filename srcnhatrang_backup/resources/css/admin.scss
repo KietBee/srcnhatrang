@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// @import './base/*.scss';
+// @import './libs/font-iconmoon';
+// @import './libs/form-animation';
+// @import './components/*.scss';
+// @import './modules/*.scss';
+@import './base/_custom.scss';
+@import './components/admin/*.scss';
+@import './components/_register.scss';

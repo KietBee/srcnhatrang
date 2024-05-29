@@ -1,0 +1,26 @@
+$map-count: 7;
+
+.heading-title {
+  @apply text-h5-md font-medium;
+}
+
+g {
+  opacity: 0.4;
+}
+
+@keyframes fade-in-out {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@for $i from 0 through $map-count {
+  .ani-map-#{$i} {
+    animation: fade-in-out 7s infinite #{$i * 2}s ease-in-out;
+  }
+}

@@ -1,0 +1,42 @@
+.form-control {
+  @apply px-10 py-5 w-full border-1 border-black block;
+}
+
+.input-group {
+  @apply rounded-lg w-full pt-8 pb-5 pl-5 pr-24 gap-5 text-black font-sans text-lg font-normal;
+  &:focus {
+    @apply outline-primary-200;
+  }
+}
+
+.form-control-outline {
+  .group-box {
+    @apply relative;
+  }
+  
+  .group-box {
+    input {
+      @apply w-full p-5 mb-15 border-0 border-b-1 border-white border-solid outline-none bg-transparent;
+      box-shadow:none;
+    }
+  }
+  
+  .group-box label {
+    @apply absolute top-0 left-5 py-5 pointer-events-none;
+    transition: .5s;
+  }
+  
+  .group-box input:focus ~ label,
+  .group-box input:valid ~ label {
+    @apply -top-10 left-0 text-gray-100;
+    font-size: 12px;
+  }
+
+  input:-internal-autofill-selected {
+    background-color: transparent !important;
+  }
+}
+
+.search-btn {
+  box-shadow:none !important;
+}

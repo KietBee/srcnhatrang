@@ -1,0 +1,55 @@
+<footer id="footer" class="text-white bg-primary-400 footer max-width">
+  <div class="container footer-top">
+    <div class="row items-center py-30 -mx-9 md:px-24 gap-4 md:gap-[13px] 2xl:py-32 2xl:px-35 2xl:flex-nowrap 2xl:items-start">
+      <div class="col flex flex-col items-center w-full md:gap-13 2xl:w-1/2 2xl:flex-row">
+        <div class="col flex flex-col footer-print items-center w-full gap-[21px] md:gap-[23px] 2xl:w-1/2 2xl:gap-11 2xl:items-start 2xl:pl-40">
+          <a href="#">
+            <img src="{{footer.logo_image.url}}" width="128" height="39" alt="{{footer.logo_image.alt}}">
+          </a>
+          <div class="flex flex-col items-center gap-7 info 2xl:items-start 2xl:gap-7">
+            <address><a href="{{footer.address.url}}" rel="noopener noreferrer" target="_blank" class="small font-normal"><span class="sr-only">Address: </span>{{footer.address.title}}</a></address> 
+            <a href="{{footer.phone_number.url}}" rel="noopener noreferrer" target="_blank" class="p font-bold"><span class="sr-only">Phone number: </span>{{footer.phone_number.title}}</a>
+          </div>
+          <div class="social-footer py-2p5">
+            {% include "components/social.html" %}
+          </div>
+        </div>
+        <div class="col flex justify-center w-full 2xl:w-1/2 2xl:justify-start 2xl:pl-40">
+          <ul class="footer-menu list-none pl-0 flex flex-col items-center font-raleway gap-2p5 text-base 2xl:font-body font-bold md:flex-row md:gap-16 2xl:flex-col 2xl:gap-0 2xl:mt-4 2xl:items-start">
+            {% for item in footer.menu_footer %}
+            <li>
+              <a href="{{item.url}}">{{item.title}}</a>
+            </li>
+            {%endfor%}
+          </ul>
+        </div>
+      </div>
+      <div class="px-9 w-full md:px-42 2xl:w-1/2 2xl:pr-46 2xl:pl-56 2xl:-mt-3">
+        <form class="flex flex-col gap-8">
+          <p class="h4 text-2xl font-raleway font-bold text-primary-200 m-0">Contact Us</p>
+          <div class="flex flex-wrap gap-8 justify-between">
+            <div class="w-full md:w-[48%]">
+              <label class="sr-only" for="first-name">First Name<span>*</span></label>
+              <input class="input-group" id="first-name" type="text" required placeholder="First Name*">
+              <p class="text-red-500 text-xs italic hidden">The field is required.</p>
+            </div>
+            <div class="w-full md:w-[48%]">
+              <label class="sr-only" for="last-name">Last Name<span>*</span></label>
+              <input class="input-group" id="last-name" type="text" required placeholder="Last Name*">
+              <p class="text-red-500 text-xs italic hidden">The field is required.</p>
+            </div>
+          </div>
+          <label class="sr-only" for="email">Email<span>*</span></label>
+          <input class="input-group" id="email" type="email" required placeholder="Email Address*">
+          <p class="text-red-500 text-xs italic hidden">The field is required.</p>
+          <label class="sr-only" for="message">Message<span>*</span></label>
+          <textarea class="input-group h-[177px] resize-none" rows="50" id="message" required placeholder="Message*"></textarea>
+          <p class="text-red-500 text-xs italic hidden">The field is required.</p>
+          <div class="flex items-center justify-between py-2p5 2xl:py-4">
+            <button type="submit" class="btn btn-primary-light"> Submit </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</footer>
