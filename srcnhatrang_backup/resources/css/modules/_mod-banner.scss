@@ -1,0 +1,27 @@
+.banner-title {
+  text-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.size-video iframe {
+  width: calc(1100px + 10%);
+}
+
+@screen md {
+  .size-video iframe {
+    width: calc(1440px + 10%);
+    height: calc(760px + 10%);
+  }
+}
+
+@screen 2xl {
+  .size-video iframe {
+    width: calc(2000px + 10%);
+    height: calc(1420px + 10%);
+  }
+}
+
+@screen 2k {
+  .size-video iframe {
+    width: calc(2560px + 10%);
+  }
+}

@@ -1,0 +1,10 @@
+.swiper-button-next, .swiper-button-prev{
+  &:hover{
+   @apply text-primary-400;
+  }
+}
+.swiper-pagination-bullet{
+  &:hover{
+    @apply bg-primary-300;
+   }
+}

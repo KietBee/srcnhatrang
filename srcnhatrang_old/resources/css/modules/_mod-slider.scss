@@ -1,0 +1,41 @@
+.slider-items-option-2,
+.slider-items-option-3 {
+  @apply max-w-400 md:max-w-250;
+}
+
+.slider-items-option-1 {
+  @apply max-w-400 md:max-w-400 xl:max-w-none;
+}
+
+.mod-slider-ada {
+  .slick-slide {
+    @apply mx-10 my-5;
+  }
+
+  .slick-list {
+    @apply -mx-10;
+  }
+}
+
+.slider-rotation {
+  .pause {
+    @apply hidden;
+  }
+  .play {
+    @apply block;
+    fill: var(--white);
+  }
+
+  &:hover {
+    @apply opacity-100;
+  }
+
+  &.is-rotating {
+    .pause {
+      @apply block;
+    }
+    .play {
+      @apply hidden;
+    }
+  }
+}

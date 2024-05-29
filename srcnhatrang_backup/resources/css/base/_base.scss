@@ -1,0 +1,131 @@
+@layer base {
+  html,
+  body {
+    @apply overflow-x-hidden bg-white text-base text-black font-sans;
+  }
+
+  html {
+    @apply m-0;
+  }
+
+  h1,
+  .h1 {
+    @apply text-h1 font-bold md:text-h1-md 2xl:text-h1-2xl;
+  }
+
+  h2,
+  .h2 {
+    @apply text-h2 font-bold md:text-h2-md 2xl:text-h2-2xl;
+  }
+
+  h3,
+  .h3 {
+    @apply text-h3 font-bold md:text-h3-md 2xl:text-h3-2xl;
+  }
+
+  h4,
+  .h4 {
+    @apply text-h4 font-bold md:text-h4-md 2xl:text-h4-2xl;
+  }
+
+  h5,
+  .h5 {
+    @apply text-h5 font-bold;
+  }
+
+  h6,
+  .h6 {
+    @apply text-h6 font-bold;
+  }
+
+  p,
+  .p {
+    @apply text-base font-body font-normal;
+  }
+
+  small,
+  .small {
+    @apply text-sm font-body font-bold;
+  }
+
+  .extra-small {
+    @apply text-xs font-medium font-body;
+  }
+
+  .text-design {
+    @apply text-4xl font-normal tracking-wider text-white md:text-h1-md 2xl:text-h1-2xl 2xl:font-thin md:leading-[3.625rem];
+  }
+
+  address,
+  .address {
+    @apply not-italic small;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply mb-8;
+  }
+
+  p,
+  li,
+  ol,
+  ul,
+  blockquote,
+  figure {
+    margin: 0 0 15px;
+  }
+
+  ol,
+  ul {
+    @apply block pl-20;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+}
+
+a {
+  @apply text-black no-underline;
+}
+
+a,
+button {
+  transition:
+    0.25s color,
+    0.25s background-color,
+    0.25s border;
+  &.mouse {
+    // force remove focus when user click
+    outline: none !important; // stylelint-disable-line declaration-no-important
+  }
+  &:focus,
+  &:focus-visible {
+    outline-offset: 3px;
+  }
+}
+
+table {
+  @apply w-full;
+  th,
+  tr {
+    @apply border-b-1 p-2 border-transparent;
+  }
+  th {
+    @apply font-bold;
+  }
+  td {
+    @apply p-5;
+  }
+  tr:last-child {
+    @apply border-b-0;
+  }
+}
