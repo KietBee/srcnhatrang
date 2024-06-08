@@ -20,10 +20,10 @@ class Pet {
 
     handleDelete(event) {
         var petId = $(event.target).data('target')
-        if (confirm('Bạn có chắc chắn muốn xóa bản ghi này không?')) {
+        if (confirm('Bạn có chắc chắn muốn xóa bản ghi này không? Tất cả các dữ liệu liên quan đầu bị xóa!')) {
             var csrfToken = $('meta[name="csrf-token"]').attr('content')
             $.ajax({
-                url: '/pet/' + petId,
+                url: '/admin/pet/' + petId,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken

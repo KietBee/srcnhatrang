@@ -1,624 +1,228 @@
 @extends('layouts.admin')
-
 @section('content')
-<div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-  <div class="flex justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700">
-    <div class="flex items-center">
-      <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center me-3">
-        <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 19">
-          <path d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z"/>
-          <path d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z"/>
-        </svg>
-      </div>
-      <div>
-        <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">3.4k</h5>
-        <p class="text-sm font-normal text-gray-500 dark:text-gray-400">Leads generated per week</p>
-      </div>
-    </div>
-    <div>
-      <span class="bg-green-100 text-green-800 text-xs font-medium inline-flex items-center px-2.5 py-1 rounded-md dark:bg-green-900 dark:text-green-300">
-        <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4"/>
-        </svg>
-        42.5%
-      </span>
-    </div>
-  </div>
+    <main class="p-6 sm:p-10 space-y-6">
+        <div class="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between">
+            <div class="mr-6">
+                <h1 class="text-4xl font-semibold mb-2">
+                    {{ $title . ' ' . Auth::user()->first_name . ' ' . Auth::user()->last_name . '!' }}</h1>
+                <h2 class="text-gray-600 ml-0.5">{{ 'Bây giờ là ' . now()->format('H:i:s d/m/Y') }}</h2>
+            </div>
+            <div class="flex flex-wrap items-start justify-end -mb-3 gap-3">
+                <button id="refresh" class="inline-flex px-5 py-3 text-white hover:bg-primary-100  bg-primary-950 rounded-md mb-3">
+                    <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                        height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4" />
+                    </svg>
 
-  <div class="grid grid-cols-2">
-    <dl class="flex items-center">
-        <dt class="text-gray-500 dark:text-gray-400 text-sm font-normal me-1">Money spent:</dt>
-        <dd class="text-gray-900 text-sm dark:text-white font-semibold">$3,232</dd>
-    </dl>
-    <dl class="flex items-center justify-end">
-        <dt class="text-gray-500 dark:text-gray-400 text-sm font-normal me-1">Conversion rate:</dt>
-        <dd class="text-gray-900 text-sm dark:text-white font-semibold">1.2%</dd>
-    </dl>
-  </div>
-
-  <div id="column-chart"></div>
-    <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
-      <div class="flex justify-between items-center pt-5">
-        <!-- Button -->
-        <button
-          id="dropdownDefaultButton"
-          data-dropdown-toggle="lastDaysdropdown"
-          data-dropdown-placement="bottom"
-          class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 text-center inline-flex items-center dark:hover:text-white"
-          type="button">
-          Last 7 days
-          <svg class="w-2.5 m-2.5 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-          </svg>
-        </button>
-        <!-- Dropdown menu -->
-        <div id="lastDaysdropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yesterday</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Today</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 7 days</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 30 days</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 90 days</a>
-              </li>
-            </ul>
-        </div>
-        <a
-          href="#"
-          class="uppercase text-sm font-semibold inline-flex items-center rounded-lg text-blue-600 hover:text-blue-700 dark:hover:text-blue-500  hover:bg-gray-100 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 px-3 py-2">
-          Leads Report
-          <svg class="w-2.5 h-2.5 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-</div>
-
-<div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-  <div class="flex justify-between border-gray-200 border-b dark:border-gray-700 pb-3">
-    <dl>
-      <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Profit</dt>
-      <dd class="leading-none text-3xl font-bold text-gray-900 dark:text-white">$5,405</dd>
-    </dl>
-    <div>
-      <span class="bg-green-100 text-green-800 text-xs font-medium inline-flex items-center px-2.5 py-1 rounded-md dark:bg-green-900 dark:text-green-300">
-        <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4"/>
-        </svg>
-        Profit rate 23.5%
-      </span>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-2 py-3">
-    <dl>
-      <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Income</dt>
-      <dd class="leading-none text-xl font-bold text-green-500 dark:text-green-400">$23,635</dd>
-    </dl>
-    <dl>
-      <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Expense</dt>
-      <dd class="leading-none text-xl font-bold text-red-600 dark:text-red-500">-$18,230</dd>
-    </dl>
-  </div>
-
-  <div id="bar-chart"></div>
-    <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
-      <div class="flex justify-between items-center pt-5">
-        <!-- Button -->
-        <button
-          id="dropdownDefaultButton"
-          data-dropdown-toggle="lastDaysdropdown"
-          data-dropdown-placement="bottom"
-          class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 text-center inline-flex items-center dark:hover:text-white"
-          type="button">
-          Last 6 months
-          <svg class="w-2.5 m-2.5 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-          </svg>
-        </button>
-        <!-- Dropdown menu -->
-        <div id="lastDaysdropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yesterday</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Today</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 7 days</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 30 days</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 90 days</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 6 months</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last year</a>
-              </li>
-            </ul>
-        </div>
-        <a
-          href="#"
-          class="uppercase text-sm font-semibold inline-flex items-center rounded-lg text-blue-600 hover:text-blue-700 dark:hover:text-blue-500  hover:bg-gray-100 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 px-3 py-2">
-          Revenue Report
-          <svg class="w-2.5 h-2.5 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-</div>
-
-{{-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> --}}
-<script>
-  
-const options = {
-  series: [
-    {
-      name: "Income",
-      color: "#31C48D",
-      data: ["1420", "1620", "1820", "1420", "1650", "2120"],
-    },
-    {
-      name: "Expense",
-      data: ["788", "810", "866", "788", "1100", "1200"],
-      color: "#F05252",
-    }
-  ],
-  chart: {
-    sparkline: {
-      enabled: false,
-    },
-    type: "bar",
-    width: "100%",
-    height: 400,
-    toolbar: {
-      show: false,
-    }
-  },
-  fill: {
-    opacity: 1,
-  },
-  plotOptions: {
-    bar: {
-      horizontal: true,
-      columnWidth: "100%",
-      borderRadiusApplication: "end",
-      borderRadius: 6,
-      dataLabels: {
-        position: "top",
-      },
-    },
-  },
-  legend: {
-    show: true,
-    position: "bottom",
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  tooltip: {
-    shared: true,
-    intersect: false,
-    formatter: function (value) {
-      return "$" + value
-    }
-  },
-  xaxis: {
-    labels: {
-      show: true,
-      style: {
-        fontFamily: "Inter, sans-serif",
-        cssClass: 'text-xs font-normal fill-gray-500 dark:fill-gray-400'
-      },
-      formatter: function(value) {
-        return "$" + value
-      }
-    },
-    categories: ["Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    axisTicks: {
-      show: false,
-    },
-    axisBorder: {
-      show: false,
-    },
-  },
-  yaxis: {
-    labels: {
-      show: true,
-      style: {
-        fontFamily: "Inter, sans-serif",
-        cssClass: 'text-xs font-normal fill-gray-500 dark:fill-gray-400'
-      }
-    }
-  },
-  grid: {
-    show: true,
-    strokeDashArray: 4,
-    padding: {
-      left: 2,
-      right: 2,
-      top: -20
-    },
-  },
-  fill: {
-    opacity: 1,
-  }
-}
-
-if(document.getElementById("bar-chart") && typeof ApexCharts !== 'undefined') {
-  const chart = new ApexCharts(document.getElementById("bar-chart"), options);
-  chart.render();
-}
-
-
-//   const options = {
-//   colors: ["#1A56DB", "#FDBA8C"],
-//   series: [
-//     {
-//       name: "Organic",
-//       color: "#1A56DB",
-//       data: [
-//         { x: "Mon", y: 231 },
-//         { x: "Tue", y: 122 },
-//         { x: "Wed", y: 63 },
-//         { x: "Thu", y: 421 },
-//         { x: "Fri", y: 122 },
-//         { x: "Sat", y: 323 },
-//         { x: "Sun", y: 111 },
-//       ],
-//     },
-//     {
-//       name: "Social media",
-//       color: "#FDBA8C",
-//       data: [
-//         { x: "Mon", y: 232 },
-//         { x: "Tue", y: 113 },
-//         { x: "Wed", y: 341 },
-//         { x: "Thu", y: 224 },
-//         { x: "Fri", y: 522 },
-//         { x: "Sat", y: 411 },
-//         { x: "Sun", y: 243 },
-//       ],
-//     },
-//   ],
-//   chart: {
-//     type: "bar",
-//     height: "320px",
-//     fontFamily: "Inter, sans-serif",
-//     toolbar: {
-//       show: false,
-//     },
-//   },
-//   plotOptions: {
-//     bar: {
-//       horizontal: false,
-//       columnWidth: "70%",
-//       borderRadiusApplication: "end",
-//       borderRadius: 8,
-//     },
-//   },
-//   tooltip: {
-//     shared: true,
-//     intersect: false,
-//     style: {
-//       fontFamily: "Inter, sans-serif",
-//     },
-//   },
-//   states: {
-//     hover: {
-//       filter: {
-//         type: "darken",
-//         value: 1,
-//       },
-//     },
-//   },
-//   stroke: {
-//     show: true,
-//     width: 0,
-//     colors: ["transparent"],
-//   },
-//   grid: {
-//     show: false,
-//     strokeDashArray: 4,
-//     padding: {
-//       left: 2,
-//       right: 2,
-//       top: -14
-//     },
-//   },
-//   dataLabels: {
-//     enabled: false,
-//   },
-//   legend: {
-//     show: false,
-//   },
-//   xaxis: {
-//     floating: false,
-//     labels: {
-//       show: true,
-//       style: {
-//         fontFamily: "Inter, sans-serif",
-//         cssClass: 'text-xs font-normal fill-gray-500 dark:fill-gray-400'
-//       }
-//     },
-//     axisBorder: {
-//       show: false,
-//     },
-//     axisTicks: {
-//       show: false,
-//     },
-//   },
-//   yaxis: {
-//     show: false,
-//   },
-//   fill: {
-//     opacity: 1,
-//   },
-// }
-
-// if(document.getElementById("column-chart") && typeof ApexCharts !== 'undefined') {
-//   const chart = new ApexCharts(document.getElementById("column-chart"), options);
-//   chart.render();
-// }
-
-</script>
-{{-- <div
-  class="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8"
->
-  <div class="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
-    <div class="flex w-full flex-wrap gap-3 sm:gap-5">
-      <div class="flex min-w-47.5">
-        <span
-          class="mr-2 mt-1 flex h-4 w-full max-w-4 items-center justify-center rounded-full border border-primary"
-        >
-          <span
-            class="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"
-          ></span>
-        </span>
-        <div class="w-full">
-          <p class="font-semibold text-primary">Total Revenue</p>
-          <p class="text-sm font-medium">12.04.2022 - 12.05.2022</p>
-        </div>
-      </div>
-      <div class="flex min-w-47.5">
-        <span
-          class="mr-2 mt-1 flex h-4 w-full max-w-4 items-center justify-center rounded-full border border-secondary"
-        >
-          <span
-            class="block h-2.5 w-full max-w-2.5 rounded-full bg-secondary"
-          ></span>
-        </span>
-        <div class="w-full">
-          <p class="font-semibold text-secondary">Total Sales</p>
-          <p class="text-sm font-medium">12.04.2022 - 12.05.2022</p>
-        </div>
-      </div>
-    </div>
-    <div class="flex w-full max-w-45 justify-end">
-      <div
-        class="inline-flex items-center rounded-md bg-whiter p-1.5 dark:bg-meta-4"
-      >
-        <button
-          class="rounded bg-white px-3 py-1 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark"
-        >
-          Day
-        </button>
-        <button
-          class="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark"
-        >
-          Week
-        </button>
-        <button
-          class="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark"
-        >
-          Month
-        </button>
-      </div>
-    </div>
-  </div>
-  <div>
-    <div id="chartOne" class="-ml-5"></div>
-  </div>
-</div> --}}
-
-  {{-- <style>
-    a.active {
-        border: solid #93c5fd 1px;
-        background-color: #54a5ff;
-        color: white;
-    }
-    a.active:hover {
-        background-color: #2a7bd4;
-        color: white;
-    }
-    .field-value tr:nth-child(even){
-        background-color: #f2f2f2;
-    }
-    .field-value tr:nth-child(even):hover {
-        background-color: rgb(229 231 235);
-    }
-</style>
-    <div class="container lg:max-w-[1600px] mx-auto my-10 px-10">
-        <div x-data="{ showModal1: false, showModal2: false, showModal3: false, id: '', name: '', status: ''}">
-            <div class="flex">
-                <button @click="showModal1 = true" class="w-[10%] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
-                    Add new
+                    Làm mới dữ liệu
                 </button>
-                <div class="w-[80%] text-center text-5xl font-bold">Brandwatch - FAB Dashboards</div>
-            </div>
-            <!-- Modal -->
-            <div x-show="showModal1" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div class="w-[400px] bg-white p-6 max-w-lg mx-auto rounded-lg shadow-lg" @click.away="showModal1 = false">
-                <form class="relative" method="post">
-                    <div>
-                        <p class="text-3xl font-bold pb-7">Add new brand</p>
-                    </div>
-                    <div class="mb-5">
-                        <label for="brand" class="block mb-2 text-sm font-medium text-gray-900">Brand</label>
-                        <input type="text" id="brand" name="brand" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
-                    </div>
-                    <div class="mb-5">
-                        <label for="project_ID" class="block mb-2 text-sm font-medium text-gray-900">Project ID</label>
-                        <input type="text" id="project_ID" name="project_ID" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
-                    </div>
-                    <div class="mb-5">
-                        <label for="query_ID" class="block mb-2 text-sm font-medium text-gray-900">Query ID</label>
-                        <input type="text" id="query_ID" name="query_ID" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
-                    </div>
-                    <div class="mb-5 text-lg">
-                        <label for="status" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
-                        <select id="status" name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value="1">Publish</option>
-                            <option value="0">Unpublish</option> 
-                        </select>
-                    </div>
-                    <button type="submit" name="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
-                    Submit
-                    </button>
-                    <button @click="showModal1 = false" type="button" class="absolute top-0 end-0.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-hide="popup-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </form>
-                </div>
-            </div>
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-10">
-                <table class="w-full text-sm text-left rtl:text-right">
-                    <thead class="text-xs  uppercase bg-white border-b border-gray-200">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                ID
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Brand
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Project ID
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Query ID
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Date create
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Rows
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center">
-                                Status
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center">
-                                Delete
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center">
-                                Detail
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="field-value">
-                      echo '<tr class="bg-white border-b border-gray-200 hover:bg-gray-200">';
-                        echo '<td class="px-6 py-4">'.$value->ID.'</td>';
-                        echo '<td class="px-6 py-4">'.$value->brand.'</td>';
-                        echo '<td class="px-6 py-4">'.$value->project_ID.'</td>';
-                        echo '<td class="px-6 py-4">'.$value->query_ID.'</td>';
-                        echo '<td class="px-6 py-4">'.$value->created_at.'</td>';
-                        echo '<td class="px-6 py-4">'.$rows[0]['COUNT(*)'].'</td>';
-                        echo '<td class="px-6 py-4 flex">
-                        <button x-on:click="showModal3 = true; status = '.$value->status.'; id = '.$value->ID.';"  class="mx-auto btn-status text-white font-medium rounded-lg text-sm px-5 py-2.5 '.$bg_color.'">
-                                '.$status_value.'
-                                </button>
-                            </td>';
-                        echo '<td class="px-6 py-4 hover:cursor-pointer text-red-800 hover:text-red-600">
-                        <svg  x-on:click="showModal2 = true; id = '.$value->ID.'; name = \''.$value->brand.'\';" class="mx-auto feather feather-trash-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
-                        </td>
-                        <td class="px-6 py-4 hover:cursor-pointer text-blue-800 hover:text-blue-600">
-                        <svg x-bind:data-id="'.$value->ID.'" class="value-id mx-auto feather feather-info" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg></td></tr>';
-                        echo '<tr class="bg-white border-b border-gray-200 hover:bg-gray-200">';
-                          echo '<td class="px-6 py-4">'.$value->ID.'</td>';
-                          echo '<td class="px-6 py-4">'.$value->brand.'</td>';
-                          echo '<td class="px-6 py-4">'.$value->project_ID.'</td>';
-                          echo '<td class="px-6 py-4">'.$value->query_ID.'</td>';
-                          echo '<td class="px-6 py-4">'.$value->created_at.'</td>';
-                          echo '<td class="px-6 py-4">'.$rows[0]['COUNT(*)'].'</td>';
-                          echo '<td class="px-6 py-4 flex">
-                          <button x-on:click="showModal3 = true; status = '.$value->status.'; id = '.$value->ID.';"  class="mx-auto btn-status text-white font-medium rounded-lg text-sm px-5 py-2.5 '.$bg_color.'">
-                                  '.$status_value.'
-                                  </button>
-                              </td>';
-                          echo '<td class="px-6 py-4 hover:cursor-pointer text-red-800 hover:text-red-600">
-                          <svg  x-on:click="showModal2 = true; id = '.$value->ID.'; name = \''.$value->brand.'\';" class="mx-auto feather feather-trash-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
-                          </td>
-                          <td class="px-6 py-4 hover:cursor-pointer text-blue-800 hover:text-blue-600">
-                          <svg x-bind:data-id="'.$value->ID.'" class="value-id mx-auto feather feather-info" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg></td></tr>';
-                    </tbody>
-                </table>
-            </div>
-            <div x-show="showModal2" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div class="w-[350px] bg-white p-6 max-w-lg mx-auto rounded-lg shadow-lg" @click.away="showModal2 = false">
-                <form class="relative" method="POST">
-                    <div>
-                        <p class="text-3xl font-bold pb-2">Confirm</p>
-                    </div>
-                    <div>
-                        <p>
-                            Are you sure you want delete field value? <br>
-                            ID: <span x-text="id"></span><br>
-                            Name: <span x-text="name"></span>
-                        </p>
-                        <input name="id" type="text" hidden x-bind:value="id">
-                    </div>
-                    <div class="flex mt-4">
-                        <button type="submit" name="delete" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5">
-                        Delete
-                        </button>
-                        <button @click="showModal2 = false" type="button" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm ml-auto px-5 py-2.5">
-                        Cancel
-                        </button>
-                    </div>
-                </form>
-                </div>
-            </div>
-            <div x-show="showModal3" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div class="w-[300px] bg-white p-6 max-w-lg mx-auto rounded-lg shadow-lg" @click.away="showModal3 = false">
-                <form class="relative" method="POST">
-                    <div>
-                        <p class="text-3xl font-bold pb-2">Confirm</p>
-                    </div>
-                    <div> 
-                        <p>
-                            Change status field value with ID: <span x-text="id"></span>
-                        </p>
-                        <input name="id" type="text" hidden x-bind:value="id">
-                        <input name="status" type="text" hidden x-bind:value="status">
-                    </div>
-                    <div class="flex mt-4">
-                        <button type="submit" name="ChangeStatus" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5">
-                        Confirm
-                        </button>
-                        <button @click="showModal3 = false" type="button" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm ml-auto px-5 py-2.5">
-                        Cancel
-                        </button>
-                    </div>
-                </form>
-                </div>
             </div>
         </div>
-    </div> --}}
+        <section class="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <a href="#" class="flex items-center p-8 bg-white shadow rounded-lg bump-up">
+                <div
+                    class="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-blue-600 bg-blue-100 rounded-full mr-6">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd"
+                            d="M22 5.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.343 8.343 0 0 1-2.605.981A4.13 4.13 0 0 0 15.85 4a4.068 4.068 0 0 0-4.1 4.038c0 .31.035.618.105.919A11.705 11.705 0 0 1 3.4 4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 6.1 13.635a4.192 4.192 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 2 18.184 11.732 11.732 0 0 0 8.291 20 11.502 11.502 0 0 0 19.964 8.5c0-.177 0-.349-.012-.523A8.143 8.143 0 0 0 22 5.892Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="block text-2xl font-bold counter" data-target="{{ $petNumber }}"></span>
+                    <span class="block text-gray-500">Số lượng thú cưng ở trung tâm</span>
+                    </span>
+                </div>
+            </a>
+            <a href="#" class="flex items-center p-8 bg-white shadow rounded-lg bump-up">
+                <div
+                    class="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-blue-600 bg-blue-100 rounded-full mr-6">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 12a28.076 28.076 0 0 1-1.091 9M7.231 4.37a8.994 8.994 0 0 1 12.88 3.73M2.958 15S3 14.577 3 12a8.949 8.949 0 0 1 1.735-5.307m12.84 3.088A5.98 5.98 0 0 1 18 12a30 30 0 0 1-.464 6.232M6 12a6 6 0 0 1 9.352-4.974M4 21a5.964 5.964 0 0 1 1.01-3.328 5.15 5.15 0 0 0 .786-1.926m8.66 2.486a13.96 13.96 0 0 1-.962 2.683M7.5 19.336C9 17.092 9 14.845 9 12a3 3 0 1 1 6 0c0 .749 0 1.521-.031 2.311M12 12c0 3 0 6-2 9" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="block text-2xl font-bold counter" data-target="{{ $petAdoptionRequestNumber }}"></span>
+                    <span class="block text-gray-500">Yêu cầu nhận nuôi chưa kiểm duyệt</span>
+                    </span>
+                </div>
+            </a>
+
+            <a href="#" class="flex items-center p-8 bg-white shadow rounded-lg bump-up">
+                <div
+                    class="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-blue-600 bg-blue-100 rounded-full mr-6">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd"
+                            d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6Zm4.996 2a1 1 0 0 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 8a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Zm-4.004 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 11a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Zm-4.004 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 14a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="block text-2xl font-bold counter" data-target="{{ $storyNumber }}"></span>
+                    <span class="block text-gray-500">Bài viết chưa kiểm duyệt</span>
+                    </span>
+                </div>
+            </a>
+            <a class="flex items-center p-8 bg-white shadow rounded-lg bump-up">
+                <div
+                    class="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-blue-600 bg-blue-100 rounded-full mr-6">
+                    <svg class="w-[30px] h-[30px] text-gray-800 dark:text-white" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M14.502 7.046h-2.5v-.928a2.122 2.122 0 0 0-1.199-1.954 1.827 1.827 0 0 0-1.984.311L3.71 8.965a2.2 2.2 0 0 0 0 3.24L8.82 16.7a1.829 1.829 0 0 0 1.985.31 2.121 2.121 0 0 0 1.199-1.959v-.928h1a2.025 2.025 0 0 1 1.999 2.047V19a1 1 0 0 0 1.275.961 6.59 6.59 0 0 0 4.662-7.22 6.593 6.593 0 0 0-6.437-5.695Z" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="block text-2xl font-bold counter" data-target="{{ $feedBackNumber }}"></span>
+                    <span class="block text-gray-500">Phản hồi chưa trả lời</span>
+                    </span>
+                </div>
+            </a>
+        </section>
+        <section class="grid md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-3 xl:grid-flow-col gap-6">
+            <div class="flex flex-col md:col-span-2 md:row-span-2 bg-white shadow rounded-lg">
+                <div class="px-6 py-5 font-semibold border-b border-gray-100">Biểu đồ số lượng quyên góp trong ngày</div>
+                <div class="p-4 flex-grow">
+                    @if ($donationData && count($donationData) > 0)
+                        <div class="text-gray-400 text-3xl bg-gray-100 border-2 border-gray-200 border-dashed rounded-md">
+                            <div id="myChart"></div>
+                        </div>
+                    @else
+                        <div
+                            class="flex items-center justify-center h-full px-4 py-16 text-gray-400 text-3xl font-semibold bg-gray-100 border-2 border-gray-200 border-dashed rounded-md">
+                            Chưa có dữ liệu thống kê
+                        </div>
+                    @endif
+                </div>
+            </div>
+            <div class="flex items-center p-8 bg-white shadow rounded-lg">
+                <div
+                    class="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-yellow-600 bg-yellow-100 rounded-full mr-6">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd"
+                            d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
+                            clip-rule="evenodd" />
+                    </svg>
+
+                </div>
+                <div>
+                    <span class="block text-2xl font-bold">{{ $userNumber }}</span>
+                    <span class="block text-gray-500">Số lượng tài khoản</span>
+                </div>
+            </div>
+            <div class="flex items-center p-8 bg-white shadow rounded-lg">
+                <div
+                    class="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-teal-600 bg-teal-100 rounded-full mr-6">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                        viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 12h4m-2 2v-4M4 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+
+                </div>
+                <div>
+                    <span class="block text-2xl font-bold">{{ $newUserNumber }}</span>
+                    <span class="block text-gray-500">Số lượng tài khoản mới trong ngày</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:col-span-2 md:row-span-3 bg-white shadow rounded-lg">
+                <div class="px-6 py-5 font-semibold border-b border-gray-100">Biểu đồ quyên góp và chi tiêu của năm</div>
+                <div class="p-4 flex-grow">
+                    <div class="h-full bg-gray-100 border-2 border-gray-200 border-dashed rounded-md p-2">
+                        <div id="columnchart_material" class="h-full"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        google.charts.load('current', {
+            packages: ['corechart']
+        });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            // Set Data
+            const data = google.visualization.arrayToDataTable([
+                ['Price', 'Size'],
+                @foreach ($donationData as $index => $item)
+                    [{{ $index }}, {{ $item }}],
+                @endforeach
+            ]);
+
+            // Set Options
+            const options = {
+                legend: 'none',
+                pointSize: 2,
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
+                },
+                curveType: 'function',
+                hAxis: {title: 'Giờ'},
+                vAxis: {title: 'Số lượng quyên góp'},
+            };
+
+            // Draw
+            const chart = new google.visualization.LineChart(document.getElementById('myChart'));
+            chart.draw(data, options);
+        }
+
+
+        google.charts.load('current', {
+            'packages': ['bar']
+        });
+        google.charts.setOnLoadCallback(drawChartMaterial);
+        var monthlyTotals = @json($monthlyTotals);
+        function drawChartMaterial() {
+            var data = google.visualization.arrayToDataTable([
+                ['Năm {{ now()->year }}', 'Tổng quyên góp', 'Tổng chi tiêu'],
+                @foreach($monthlyTotals as $month => $totals)
+                ['{{ $month }}', {{ $totals['total_money_expenses'] }}, {{ $totals['total_amount_donation'] }}],
+            @endforeach
+            ]);
+            var options = {
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
+                },
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+        }
+        const counters = document.querySelectorAll(".counter");
+
+        counters.forEach((counter) => {
+            counter.innerText = "0";
+            const updateCounter = () => {
+                const target = +counter.getAttribute("data-target");
+                const count = +counter.innerText;
+                const increment = target / 200;
+                if (count < target) {
+                    counter.innerText = `${Math.ceil(count + increment)}`;
+                    setTimeout(updateCounter, 1);
+                } else counter.innerText = target;
+            };
+            updateCounter();
+        });
+
+        $(document).ready(function() {
+            $('#refresh').click(function() {
+                location.reload();
+            });
+        });
+    </script>
 @endsection

@@ -79,15 +79,15 @@ class HomeController extends Controller
             'title' => 'Xin chào! Con tên là ' . $petAdoption->pet['pet_name'],
             'description' => $petAdoption['description'],
             'image' => [
-                'url' => $petAdoption['image_feature'],
+                'url' => $petAdoption['image_feature']?asset('storage/images/'.$petAdoption['image_feature']):asset('storage/images/default.jpg'),
                 'alt' => 'hình thú cưng',
             ],
             'link' => [
-                'url' => '#',
+                'url' => route('pet-adoptions.details', ['id' => $petAdoption->pet_adoption_id]),
                 'title' => 'Nhận nuôi thú cưng',
             ],
             'linkAll' => [
-                'url' => '#',
+                'url' => route('pet-adoptions'),
                 'title' => 'Xem tất cả thú cưng',
             ],
         ];
@@ -104,11 +104,11 @@ class HomeController extends Controller
                 'date' => $story->approved_at,
                 'category' => $story->category,
                 'image' => [
-                    'url' => $story->feature_image_url,
+                    'url' => $story->feature_image_url?asset('storage/images/'.$story->feature_image_url):asset('storage/images/default.jpg'),
                     'alt' => $story->title,
                 ],
                 'link' => [
-                    'url' => '#',
+                    'url' => route('new-and-post.details', ['id' => $story->story_id]),
                     'title' => 'Đọc thêm',
                 ],
             ];
@@ -116,7 +116,7 @@ class HomeController extends Controller
         $listStories['postStories'] = $postStories;
         $listStories['headline'] = 'Tin tức và bài viết mới nhất';
         $listStories['linkAll'] = [
-            'url' => '#',
+            'url' => route('new-and-post'),
             'title' => 'Xem tất cả tin tức và bài viết',
         ];
 

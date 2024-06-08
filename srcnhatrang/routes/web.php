@@ -17,13 +17,9 @@ use App\Http\Controllers\Client\PayMentController;
 use App\Http\Controllers\Client\StatisticsController;
 use App\Http\Controllers\Client\FeedbacksController;
 
+
 Route::get('districts/{province_id}', [AddressController::class, 'getDistricts'])->name('districts');
 Route::get('wards/{district_id}', [AddressController::class, 'getWards'])->name('wards');
-
-Route::get('send-email', function () {
-    Mail::to('hien37211@gmail.com')->send(new NotifyMail());
-    echo "Email has been sent";
-});
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

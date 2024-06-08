@@ -11,7 +11,7 @@
                     <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 delay-4 anima-right">{{ $content['title'] }}</h2>
                     <p class="mb-3 font-normal text-gray-700 delay-6 anima-right">{{ $content['description'] }}</p>
                     <a href="{{ $content['link']['url'] }}"
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 delay-8 anima-right">
+                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-100 rounded-lg hover:bg-primary-900 focus:ring-4 focus:outline-none focus:ring-blue-300 delay-8 anima-right">
                         {{ $content['link']['title'] }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 14 10">
@@ -21,7 +21,7 @@
                     </a>
                     @if (isset($content['linkAll']) && $content['linkAll'])
                         <a href="{{ $content['linkAll']['url'] }}"
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 delay-10 anima-right">
+                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-100 rounded-lg hover:bg-primary-900 focus:ring-4 focus:outline-none focus:ring-blue-300 delay-10 anima-right">
                             {{ $content['linkAll']['title'] }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">

@@ -18,9 +18,8 @@ class PetImageFactory extends Factory
     public function definition(): array
     {
         return [
-            'pet_image_id' => substr($this->faker->unique()->uuid, 0, 8),
             'pet_id' => Pet::inRandomOrder()->first()->pet_id,
-            'pet_image' => $this->faker->imageUrl(),
+            'pet_image' => 'default.jpg',
         ];
     }
 }

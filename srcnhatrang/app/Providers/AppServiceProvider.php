@@ -14,6 +14,18 @@ use App\Models\Breed;
 use App\Models\Category;
 use App\Models\Pet;
 use App\Models\Fund;
+use App\Models\PetAdoption;
+use App\Models\PetAdoptionRequest;
+use App\Models\Story;
+use App\Models\Feedback;
+use App\Models\User;
+use App\Models\MoneyDonation;
+use App\Models\Statistic;
+use App\Models\PrimaryColor;
+use App\Models\Age;
+use App\Models\Size;
+use App\Models\Specie;
+use Illuminate\Support\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +47,73 @@ class AppServiceProvider extends ServiceProvider
                 ->subject('Xác nhận địa chỉ Email')
                 ->line('Nhấn vào nút dưới đây để xác nhận địa chỉ email của bạn.')
                 ->action('Xác nhận địa chỉ Email', $url);
+        });
+
+        View::composer(['page.admin.dashboard'], function ($view) {
+            $hour = Carbon::now()->format('H');
+
+            if ($hour >= 5 && $hour < 11) {
+                $title = "Xin chào buổi sáng";
+            } elseif ($hour >= 11 && $hour < 14) {
+                $title = "Xin chào buổi trưa";
+            } elseif ($hour >= 14 && $hour < 18) {
+                $title = "Xin chào buổi chiều";
+            } else {
+                $title = "Xin chào buổi tối";
+            }
+
+            $totalPets = Pet::count();
+            $adoptedPets = PetAdoption::where('adopted', true)->count();
+            $petNumber = $totalPets - $adoptedPets;
+
+            $petAdoptionRequestNumber = PetAdoptionRequest::where('is_approval', false)->count();
+
+            $storyNumber = Story::where('is_approved', false)->count();
+
+            $feedBackNumber = Feedback::where('is_responded', false)->count();
+
+            $userNumber = User::count();
+
+            $startOfDay = Carbon::now()->startOfDay();
+            $endOfDay = Carbon::now()->endOfDay();
+            $newUserNumber = User::whereBetween('created_at', [$startOfDay, $endOfDay])->count();
+
+            $donationData = MoneyDonation::where('created_at', '>=', $startOfDay)
+                ->orderBy('created_at')
+                ->get()
+                ->groupBy(function ($item) {
+                    return Carbon::parse($item->created_at)->format('H');
+                })
+                ->map(function ($item) {
+                    return $item->count();
+                })
+                ->toArray();
+
+            $currentMonth = Carbon::now()->month;
+            $currentYear = Carbon::now()->year;
+            $monthlyTotals = [];
+            for ($month = 1; $month <= $currentMonth; $month++) {
+                $totals = Statistic::where('year', $currentYear)
+                    ->where('month', $month)
+                    ->selectRaw('SUM(total_money_expenses) as total_expenses, SUM(total_amount_donation) as total_donations')
+                    ->first();
+                $monthlyTotals[$month] = [
+                    'total_money_expenses' => $totals->total_expenses ?? 0,
+                    'total_amount_donation' => $totals->total_donations ?? 0,
+                ];
+            }
+
+            $view->with([
+                'title' => $title,
+                'petNumber' => $petNumber,
+                'petAdoptionRequestNumber' => $petAdoptionRequestNumber,
+                'storyNumber' => $storyNumber,
+                'feedBackNumber' => $feedBackNumber,
+                'userNumber' => $userNumber,
+                'newUserNumber' => $newUserNumber,
+                'donationData' => $donationData,
+                'monthlyTotals' => $monthlyTotals,
+            ]);
         });
 
         View::composer(['page.admin.*', 'index', 'page.app.*', 'livewire.*'], function ($view) {
@@ -71,7 +150,7 @@ class AppServiceProvider extends ServiceProvider
                     'url' => asset('storage/images/app/home/header/logo-header.svg'),
                     'alt' => 'Alt text của logo',
                 ],
-                'aboutUs' => 
+                'aboutUs' =>
                 '<p>
                     Trung tâm cứu trợ động vật SRC Nha Trang là một tổ chức phi lợi nhuận được thành lập vào ngày 20/05/2024 có trung tâm đặt tại 02, Nguyễn Đình Chiểu, Vĩnh Thọ, Nha Trang. Trung tâm cứu trợ động vật đầu tiên ở Nha Trang cung cấp thức ăn, nơi trú ẩn và chăm sóc y tế hạng nhất cho động vật vô gia cư.
                 </p>',
@@ -112,29 +191,33 @@ class AppServiceProvider extends ServiceProvider
                 </svg>',
                 ],
                 [
-                    'title' => 'Quyên góp bằng tiền',
-                    'url' => route('home'),
-                    'icon' => '',
+                    'title' => 'Quyên góp',
+                    'url' => '',
+                    'icon' => '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 7h-.7c.229-.467.349-.98.351-1.5a3.5 3.5 0 0 0-3.5-3.5c-1.717 0-3.215 1.2-4.331 2.481C10.4 2.842 8.949 2 7.5 2A3.5 3.5 0 0 0 4 5.5c.003.52.123 1.033.351 1.5H4a2 2 0 0 0-2 2v2a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9a2 2 0 0 0-2-2Zm-9.942 0H7.5a1.5 1.5 0 0 1 0-3c.9 0 2 .754 3.092 2.122-.219.337-.392.635-.534.878Zm6.1 0h-3.742c.933-1.368 2.371-3 3.739-3a1.5 1.5 0 0 1 0 3h.003ZM13 14h-2v8h2v-8Zm-4 0H4v6a2 2 0 0 0 2 2h3v-8Zm6 0v8h3a2 2 0 0 0 2-2v-6h-5Z"/>
+                  </svg>
+                  
+                  ',
                     'has_sub' => [
                         [
                             'title' => 'Danh sách quyên góp',
-                            'url' => '#',
+                            'url' => route('admin.money-donation'),
                             'icon' => '',
                         ],
                         [
                             'title' => 'Tiền mặc định quyên góp một lần',
-                            'url' => '#',
+                            'url' => route('admin.predefined-only-amount'),
                             'icon' => '',
                         ],
                         [
                             'title' => 'Tiền mặc định quyên góp theo tháng',
-                            'url' => '#',
+                            'url' => route('admin.predefined-monthly-amount'),
                             'icon' => '',
                         ],
                     ]
                 ],
                 [
-                    'title' => 'Quản lý người dùng',
+                    'title' => 'Người dùng',
                     'url' => '#',
                     'icon' => '
                     <svg class="w-[30px] h-[30px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -145,37 +228,38 @@ class AppServiceProvider extends ServiceProvider
                         [
                             'title' => 'Danh sách người dùng',
                             'url' => route('admin.user'),
-                            'icon' => '
-                            <svg class="w-[30px] h-[30px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H6Zm7.25-2.095c.478-.86.75-1.85.75-2.905a5.973 5.973 0 0 0-.75-2.906 4 4 0 1 1 0 5.811ZM15.466 20c.34-.588.535-1.271.535-2v-1a5.978 5.978 0 0 0-1.528-4H18a4 4 0 0 1 4 4v1a2 2 0 0 1-2 2h-4.535Z" clip-rule="evenodd"/>
-                            </svg>
-                            ',
+                            'icon' => '',
                         ],
                         [
                             'title' => 'Loại người dùng',
-                            'url' => route('admin.pet-adoption'),
-                            'icon' => '
-                            <svg class="w-[30px] h-[30px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
-                            </svg>
-                            ',
+                            'url' => route('admin.user-type'),
+                            'icon' => '',
                         ]
                     ]
                 ],
                 [
                     'title' => 'Quản lý chi tiêu',
-                    'url' => route('home'),
-                    'icon' => '',
+                    'url' => route('admin.expense'),
+                    'icon' => '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 10h9.231M6 14h9.231M18 5.086A5.95 5.95 0 0 0 14.615 4c-3.738 0-6.769 3.582-6.769 8s3.031 8 6.769 8A5.94 5.94 0 0 0 18 18.916"/>
+                  </svg>',
                 ],
                 [
                     'title' => 'Quản lý quỹ',
-                    'url' => route('home'),
-                    'icon' => '',
+                    'url' => route('admin.fund'),
+                    'icon' => '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M10.915 2.345a2 2 0 0 1 2.17 0l7 4.52A2 2 0 0 1 21 8.544V9.5a1.5 1.5 0 0 1-1.5 1.5H19v6h1a1 1 0 1 1 0 2H4a1 1 0 1 1 0-2h1v-6h-.5A1.5 1.5 0 0 1 3 9.5v-.955a2 2 0 0 1 .915-1.68l7-4.52ZM17 17v-6h-2v6h2Zm-6-6h2v6h-2v-6Zm-2 6v-6H7v6h2Z" clip-rule="evenodd"/>
+                    <path d="M2 21a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1Z"/>
+                  </svg>
+                  ',
                 ],
                 [
                     'title' => 'Quản lý thú cưng',
                     'url' => '#',
-                    'icon' => '',
+                    'icon' => '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M22 5.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.343 8.343 0 0 1-2.605.981A4.13 4.13 0 0 0 15.85 4a4.068 4.068 0 0 0-4.1 4.038c0 .31.035.618.105.919A11.705 11.705 0 0 1 3.4 4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 6.1 13.635a4.192 4.192 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 2 18.184 11.732 11.732 0 0 0 8.291 20 11.502 11.502 0 0 0 19.964 8.5c0-.177 0-.349-.012-.523A8.143 8.143 0 0 0 22 5.892Z" clip-rule="evenodd"/>
+                  </svg>
+                  ',
                     'has_sub' => [
                         [
                             'title' => 'Danh sách Thú cưng',
@@ -197,48 +281,59 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'title' => 'Danh mục thú cưng',
                     'url' => '#',
-                    'icon' => '',
+                    'icon' => '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6Zm4.996 2a1 1 0 0 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 8a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Zm-4.004 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 11a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Zm-4.004 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 14a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Z" clip-rule="evenodd"/>
+                  </svg>
+                  ',
                     'has_sub' => [
                         [
+                            'title' => 'Hình ảnh',
+                            'url' => route('admin.pet-image'),
+                            'icon' => '',
+                        ],
+                        [
                             'title' => 'Loại',
-                            'url' => route('admin.pet'),
+                            'url' => route('admin.species'),
                             'icon' => '',
                         ],
                         [
                             'title' => 'Giống',
-                            'url' => route('admin.pet-adoption'),
+                            'url' => route('admin.breed'),
                             'icon' => '',
                         ],
                         [
                             'title' => 'Màu sắc',
-                            'url' => route('admin.pet-adoption-request'),
+                            'url' => route('admin.primary-color'),
                             'icon' => '',
                         ],
                         [
                             'title' => 'Tuổi',
-                            'url' => route('admin.pet-adoption-request'),
+                            'url' => route('admin.age'),
                             'icon' => '',
                         ],
                         [
                             'title' => 'Kích thước',
-                            'url' => route('admin.pet-adoption-request'),
+                            'url' => route('admin.size'),
                             'icon' => '',
                         ]
                     ]
                 ],
                 [
-                    'title' => 'Quản lý bài viết',
+                    'title' => 'Tin tức & Bài viết',
                     'url' => '#',
-                    'icon' => '',
+                    'icon' => '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11.5c.07 0 .14-.007.207-.021.095.014.193.021.293.021h2a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1h-1a1 1 0 1 0 0 2v11h-2V5a2 2 0 0 0-2-2H5Zm7 4a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm-6 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1ZM7 6a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Zm1 3V8h1v1H8Z" clip-rule="evenodd"/>
+                  </svg>
+                  ',
                     'has_sub' => [
                         [
-                            'title' => 'Danh sách bài viết',
-                            'url' => route('admin.pet'),
+                            'title' => 'Danh sách',
+                            'url' => route('admin.story'),
                             'icon' => '',
                         ],
                         [
-                            'title' => 'Loại bài viết',
-                            'url' => route('admin.pet-adoption'),
+                            'title' => 'Danh mục',
+                            'url' => route('admin.category'),
                             'icon' => '',
                         ],
                     ]
@@ -254,8 +349,11 @@ class AppServiceProvider extends ServiceProvider
                 ],
                 [
                     'title' => 'Thống kê',
-                    'url' => '#',
-                    'icon' => '',
+                    'url' => route('admin.statistic'),
+                    'icon' => '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v15a1 1 0 0 0 1 1h15M8 16l2.5-5.5 3 3L17.273 7 20 9.667"/>
+                  </svg>
+                  ',
                 ],
                 [
                     'title' => 'Danh sách Q & A',
@@ -275,7 +373,14 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        View::composer(['page.admin.user', 'page.admin.user-detail'], function ($view) {
+        View::composer(['page.admin.expense.index', 'page.admin.expense.edit'], function ($view) {
+            $listFunds = Fund::all();
+            $view->with([
+                'listFunds' => $listFunds,
+            ]);
+        });
+
+        View::composer(['page.admin.user.*',], function ($view) {
             $provinces = Province::all();
             $districts = District::all();
             $wards = Ward::all();
@@ -288,10 +393,20 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        View::composer(['page.admin.pet', 'page.admin.pet-adoption'], function ($view) {
+        View::composer(['page.admin.pet.*', 'page.admin.pet-adoption.*', 'page.admin.breed.*', 'page.admin.pet-image.*'], function ($view) {
+            $listPets = Pet::all();
+            $listSpecies = Specie::all();
             $listBreeds = Breed::all();
+            $listColors = PrimaryColor::all();
+            $listAges = Age::all();
+            $listSizes = Size::all();
             $view->with([
-                'listBreeds' => $listBreeds
+                'listPets' => $listPets,
+                'listSpecies' => $listSpecies,
+                'listBreeds' => $listBreeds,
+                'listColors' => $listColors,
+                'listAges' => $listAges,
+                'listSizes' => $listSizes,
             ]);
         });
 

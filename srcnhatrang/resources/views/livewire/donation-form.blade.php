@@ -14,8 +14,12 @@
                                 id="select_option{{ $index }}" value={{ $item->fund_id }} required>
                             <label class="col-span-2 xl:col-span-1" for="select_option{{ $index }}">
                                 <div
-                                    class="click_option h-16 gap-3 cursor-pointer transition-all w-full px-2 border-2 flex justify-center items-center p-1">
-                                    <img class="w-8" src="{{ $item->feature_image }}">
+                                    class="click_option h-16 gap-3 cursor-pointer transition-all w-full px-2 border-2 flex justify-start items-center p-1">
+                                    @if (file_exists(public_path('storage/images/app/upload' . $item->feature_image)))
+                                        <img class="w-8" src="{{ $item->feature_image }}">
+                                    @else
+                                        <img class="w-8" src="{{ asset('storage/images/default.jpg') }}">
+                                    @endif
                                     <p class="text-sm font-semibold">{{ $item->title }}</p>
                                 </div>
                             </label>
@@ -56,7 +60,6 @@
                             <label wire:click="changeValue({{ $amount->amount }})" for="{{ $amount->amount }}"
                                 class="h-10 font-semibold text-sm cursor-pointer transition-all justify-center items-center w-full border-2 flex ">{{ $amount->amount }}
                                 VND</label>
-
                         </div>
                     @endforeach
                 </div>
@@ -78,7 +81,7 @@
 
                 <div class="my-4 flex justify-between">
                     <button type="submit"
-                        class="px-3 py-2 bg-primary-900 font-bold text-sm text-white rounded-lg cursor-pointer transition-all hover:bg-primary-100">Thanh
+                        class="px-3 py-2 bg-primary-100 font-bold text-sm text-white rounded-lg cursor-pointer transition-all hover:bg-primary-900">Thanh
                         toán bằng VNPay</button>
                 </div>
             </form>

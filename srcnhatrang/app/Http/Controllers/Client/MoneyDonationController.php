@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Fund;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\MoneyDonation;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifyMail;
 
 class MoneyDonationController extends Controller
 {
@@ -20,13 +23,10 @@ class MoneyDonationController extends Controller
         if (!session()->has('aboutUs') || empty(session('aboutUs'))) {
             return redirect()->route('money-donation');
         } else {
-            $aboutUs = session('aboutUs');
-            return redirect()->route('thanks')->with('aboutUs', $aboutUs);
+            return view('page.app.money-donation.thanks')->with('aboutUs', session('aboutUs'));
         }
     }
     
-    
-
     public function handlePayment(Request $request)
     {
         $vnp_SecureHash = $request->get('vnp_SecureHash');
@@ -64,6 +64,15 @@ class MoneyDonationController extends Controller
                 ]);
 
                 if ($moneyDonation->wasRecentlyCreated) {
+                    $fund = Fund::findOrFail($request->get('fund'));
+                    $fund->current_balance += $request->get('Amount');
+                    $fund->save();
+
+                    $title = 'SRC Nha Trang - Cảm ơn vì món quà';
+                    $content = 'Cảm ơn vì món quà của bạn!';
+                    $view = 'email.feedback';
+
+                    Mail::to($moneyDonation->donor->email)->send(new NotifyMail($title, $content, $view));
                     $aboutUs = [
                         'content' => '
                         <h2 class="my-6 text-2xl tracking-tight font-extrabold text-gray-900 sm:text-3xl md:text-4xl">

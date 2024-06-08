@@ -15,12 +15,16 @@ return new class extends Migration
             $table->string('statistic_id', 50)->primary();
             $table->string('month', 50);
             $table->string('year', 50);
+            $table->string('fund_id', 50);
             $table->string('statist', 50);
             $table->decimal('total_amount_donation', 15, 2);
             $table->decimal('total_money_expenses', 15, 2);
-            $table->bigInteger('total_pets_rescued');
-            $table->bigInteger('total_pest_adoption');
             $table->timestamps();
+
+            $table->foreign('fund_id')
+                ->references('fund_id')
+                ->on('funds')
+                ->cascadeOnDelete();
 
             $table->foreign('statist')
                 ->references('id')
