@@ -23,7 +23,7 @@ class PetAdoption {
         if (confirm('Bạn có chắc chắn muốn xóa bản ghi này không?')) {
             var csrfToken = $('meta[name="csrf-token"]').attr('content')
             $.ajax({
-                url: '/pet-adoption/' + petAdoptionId,
+                url: '/admin/pet-adoption/' + petAdoptionId,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken

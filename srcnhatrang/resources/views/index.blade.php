@@ -3,7 +3,6 @@
 @section('content')
     <section class="mb-10 mt-[-68px]">
         @include('components.app.carousel', ['slider' => $bannerSlide])
-        {{-- @include('modules.home-banner', ['homeBanner' => $homeBanner]) --}}
         <div class="h-10"></div>
         @include('modules.mod-two-col', ['content' => $aboutUs['content'], 'image' => ['url' => $aboutUs['image']['url'], 'alt' => $aboutUs['image']['alt']]])
         <div class="h-10"></div>

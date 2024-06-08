@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
 
 class SizeSeeder extends Seeder
 {
@@ -15,23 +14,22 @@ class SizeSeeder extends Seeder
      */
     public function run(): void
     {
-        $date = Carbon::now()->format('dm');
         DB::table('sizes')->insert([
             [
-                'size_ID' => 'SISM'. $date,
-                'description' => 'Small',
+                'size_id' => 'SZ'.rand(10000000, 99999999),
+                'description' => 'Nhỏ',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'size_ID' => 'SIME'. $date,
-                'description' => 'Medium',
+                'size_id' => 'SZ'.rand(10000000, 99999999),
+                'description' => 'Trung bình',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'size_ID' => 'SILA'. $date,
-                'description' => 'Large',
+                'size_id' => 'SZ'.rand(10000000, 99999999),
+                'description' => 'Lớn',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

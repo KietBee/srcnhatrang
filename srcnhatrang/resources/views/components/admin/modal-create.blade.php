@@ -20,7 +20,7 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <form method="POST" action="{{ $route }}" class="p-4 md:p-5">
+            <form method="POST" action="{{ $route }}" enctype="multipart/form-data" class="p-4 md:p-5">
               @csrf
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     {{ $slot }}                      

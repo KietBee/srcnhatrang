@@ -5,57 +5,95 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pet;
+use App\Models\PrimaryColor;
+use App\Models\Breed;
+use App\Models\Age;
+use App\Models\Size;
+use App\Models\PetImage;
+use Illuminate\Support\Carbon;
 
 class PetController extends Controller
 {
-    public function index() {
-        return view('page.admin.pet');
+    public function index()
+    {
+        return view('page.admin.pet.index');
     }
 
-    public function getDetailPet(Request $request, $id) {
+    public function edit(Request $request, $id)
+    {
         $pet = Pet::findOrFail($id);
-        return view('admin.page.pet', compact('pet'));
+        return view('page.admin.pet.edit', compact('pet'));
     }
 
-    public function create(Request $request) {
-        // $rules = [
-        //     'firstName' => 'required|string|max:255',
-        //     'lastName' => 'required|string|max:255',
-        //     'email' => 'required|email|unique:users|max:255',
-        //     'password' => 'required|string|min:6|confirmed',
-        // ];
-    
-        // $messages = [
-        //     'email.unique' => 'Email đã tồn tại.',
-        //     'password.confirmed' => 'Mật khẩu không khớp.',
-        //     'password.min' => 'Mật khẩu phải chứa ít nhất 6 ký tự.',
-        // ];        
-        
-        // $validator = Validator::make($request->all(), $rules, $messages);
-    
-        // if ($validator->fails()) {
-        //     return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Có lỗi xảy ra trong quá trình xử lý dữ liệu!');
-        // }        
-        
-        // $user = User::create([
-        //     'id'=> 'ID'. now(),
-        //     'user_type_id' => $request->userType,
-        //     'avatar' => 'user.jpg',
-        //     'first_name' => $request->firstName,
-        //     'last_name' => $request->lastName,
-        //     'email' => $request->email,
-        //     'phone_number' => NULL,
-        //     'address_id' => NULL,
-        //     'address_description'=> NULL,
-        //     'password' => Hash::make($request->password),
-        // ]);
+    public function update(Request $request, $id)
+    {
+        try {
+            $pet = Pet::findOrFail($id);
+            $pet->primary_color_id = $request->primary_color_id;
+            $pet->age_id = $request->age_id;
+            $pet->size_id = $request->size_id;
+            $pet->breed_id = $request->breed_id;
+            $pet->pet_name = $request->pet_name;
+            $pet->gender = $request->gender;
+            $pet->description = $request->description;
+            $pet->health_status = $request->health_status;
 
-        // $user->markEmailAsVerified();
+            $pet->save();
 
-        // return redirect()->back()->with('success', 'Người dùng đã được tạo thành công!');
+            return redirect()->back()->with('success', 'Thông tin thú cưng đã được cập nhật thành công!');
+        } catch (\Exception) {
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi cập nhật thông tin thú cưng. Vui lòng thử lại sau.');
+        }
     }
 
-    public function destroy($id) {
+
+    public function create(Request $request)
+    {
+        $currentDateTime = Carbon::now()->format('Hisdm');
+
+        $request->validate([
+            'files.*' => 'file|mimes:jpg,jpeg,png,pdf,docx|max:2048',
+        ], [
+            'files.*.file' => 'Tệp tin không hợp lệ.',
+            'files.*.mimes' => 'Chỉ chấp nhận các tệp có định dạng jpg, jpeg, png, pdf, docx.',
+            'files.*.max' => 'Kích thước tệp tin tối đa là 2048KB.',
+        ]);
+
+        $pet = Pet::create([
+            'pet_id' => 'PE' . $currentDateTime,
+            'primary_color_id' => $request->primary_color_id,
+            'age_id' => $request->age_id,
+            'size_id' => $request->size_id,
+            'breed_id' => $request->breed_id,
+            'pet_name' => $request->pet_name,
+            'gender' => $request->gender,
+            'description' => $request->description,
+            'health_status' => $request->health_status,
+            'rescued_at' => now(),
+        ]);
+
+        if ($pet->wasRecentlyCreated) {
+            if ($request->hasfile('files')) {
+                foreach ($request->file('files') as $file) {
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = time() . '_' . uniqid() . '.' . $extension;
+                    $file->storeAs('public/images/app/upload', $filename);
+
+                    PetImage::create([
+                        'pet_id' => $pet->pet_id,
+                        'pet_image' => $filename,
+                    ]);
+                }
+            }
+            return redirect()->back()->with('success', 'Thú cưng mới đã được thêm thành công!');
+        } else {
+            return redirect()->back()->with('error', 'Đã có lỗi xảy ra khi thêm thú cưng mới!');
+        }
+    }
+
+
+    public function destroy($id)
+    {
         $pet = Pet::findOrFail($id);
         $pet->delete();
 

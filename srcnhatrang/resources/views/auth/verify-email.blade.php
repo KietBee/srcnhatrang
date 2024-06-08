@@ -7,8 +7,8 @@
                 alt="">
             <div class="absolute bg-black  w-full h-full opacity-60 inset-0 z-0"></div>
             <div class="w-full px-24 z-10">
-                <h1 class="text-5xl font-bold text-left tracking-wide">Keep it special</h1>
-                <p class="text-3xl my-4">Capture your personal memory in unique way, anywhere.</p>
+                <h1 class="text-5xl font-bold text-left tracking-wide">Xác nhận Email</h1>
+                <p class="text-3xl my-4">Bước cuối cùng để hoàn tất kích hoạt tài khoản.</p>
             </div>
             <div class="bottom-0 absolute p-4 text-center right-0 left-0 flex justify-center space-x-4">
                 <span>
@@ -77,14 +77,14 @@
                         @csrf
                         <button type="submit"
                             class="col-span-2 text-white font-medium block w-full p-2 text-base rounded-full bg-primary-100 hover:bg-primary-900 focus:outline-none">
-                            {{ __('Resend Verification Email') }}
+                            {{ __('Gửi lại email xác nhận') }}
                         </button>
                     </form>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
                             class="col-span-2 text-white font-medium block w-full p-2 text-base rounded-full bg-primary-100 hover:bg-primary-900 focus:outline-none">
-                            {{ __('Log Out') }}
+                            {{ __('Đăng xuất') }}
                         </button>
                     </form>
                 </div>

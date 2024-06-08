@@ -19,7 +19,7 @@ class Size extends Model
         'description',
     ];
 
-    public function pets()
+    public function pet()
     {
         return $this->hasMany(Pet::class,  'size_id');
     }

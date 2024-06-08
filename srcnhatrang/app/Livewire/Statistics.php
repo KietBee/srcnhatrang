@@ -1,13 +1,14 @@
 <?php
-
 namespace App\Livewire;
 
 use App\Models\Expense;
+use App\Models\Fund;
 use App\Models\MoneyDonation;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Statistic;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class Statistics extends Component
 {
@@ -17,19 +18,23 @@ class Statistics extends Component
 
     public $year;
     public $month;
+    public $fund;
+    public $funds;
     public $years = [];
     public $perPage = 10;
 
     protected $queryString = [
         'year' => ['except' => ''],
         'month' => ['except' => ''],
+        'fund' => ['except' => ''],
     ];
 
     public function mount()
     {
         $this->year = $this->year ?? Carbon::now()->year;
-        $this->month = $this->month ?? Carbon::now()->month; // Thêm mặc định cho tháng hiện tại nếu không có
+        $this->month = $this->month ?? Carbon::now()->month;
         $this->years = $this->getYears();
+        $this->funds = Fund::all();
     }
 
     private function getYears()
@@ -48,12 +53,17 @@ class Statistics extends Component
     {
         sleep(1);
 
+        $this->checkAndCreateStatistic();
+
         $litsStatistics = Statistic::query()
             ->when($this->year, function ($query) {
                 $query->where('year', $this->year);
             })
             ->when($this->month, function ($query) {
                 $query->where('month', $this->month);
+            })
+            ->when($this->fund, function ($query) {
+                $query->where('fund_id', $this->fund);
             })
             ->paginate($this->perPage, ['*'], 'statisticsPage');
 
@@ -64,6 +74,9 @@ class Statistics extends Component
             ->when($this->month, function ($query) {
                 $query->whereMonth('created_at', $this->month);
             })
+            ->when($this->fund, function ($query) {
+                $query->where('fund_id', $this->fund);
+            })
             ->paginate($this->perPage, ['*'], 'moneyDonationsPage');
 
         $litsExpenses = Expense::query()
@@ -73,6 +86,9 @@ class Statistics extends Component
             ->when($this->month, function ($query) {
                 $query->whereMonth('created_at', $this->month);
             })
+            ->when($this->fund, function ($query) {
+                $query->where('fund_id', $this->fund);
+            })
             ->paginate($this->perPage, ['*'], 'expensesPage');
 
         return view('livewire.statistics', [
@@ -80,6 +96,7 @@ class Statistics extends Component
             'litsMoneyAdoptions' => $litsMoneyAdoptions,
             'litsExpenses' => $litsExpenses,
             'years' => $this->years,
+            'funds' => $this->funds,
         ]);
     }
 }

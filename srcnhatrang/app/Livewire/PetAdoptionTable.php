@@ -25,14 +25,13 @@ class PetAdoptionTable extends LivewireTable
     protected function columns(): array {
         return [
             ImageColumn::make(__('Ảnh'), 'image_feature')
-            ->displayUsing(function ($imageFeature) {
-                $defaultImagePath = asset('images/pet.jpg');
-                $imagePath = asset('images/'.$imageFeature);
-                if ($imageFeature && file_exists($imagePath)) {
-                    return $imagePath;
+            ->displayUsing(function ($avatar) {
+                if ($avatar && file_exists(public_path('storage/images/app/upload/' . $avatar))) {
+                    $image = asset('storage/images/app/upload/' . $avatar);
                 } else {
-                    return $defaultImagePath;
-                }
+                    $image = asset('storage/images/default.jpg');
+                };
+                return $image;
             }),
             Column::make(__('ID'), 'pet_adoption_id')
                 ->sortable()

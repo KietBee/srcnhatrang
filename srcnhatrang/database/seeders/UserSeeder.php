@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Ward;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -17,12 +18,12 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::factory()->times(10)->create();
+        User::factory()->times(30)->create();
         DB::table('users')->insert([
             [
-                'id' => '12345678',
+                'id' => 'US00000000',
                 'user_type_id' => 'ATAD0406',
-                'avatar' => 'http://',
+                'avatar' => 'user.jpg',
                 'first_name' => 'Kiệt',
                 'last_name' => 'Nguyễn',
                 'email' => 'kiet.nt.62cntt@ntu.edu.vn',

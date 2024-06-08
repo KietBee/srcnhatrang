@@ -14,6 +14,6 @@ class FeedbackSeeder extends Seeder
      */
     public function run(): void
     {
-        Feedback::factory()->times(10)->create();
+        Feedback::factory()->times(30)->create();
     }
 }

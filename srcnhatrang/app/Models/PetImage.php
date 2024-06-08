@@ -10,7 +10,6 @@ class PetImage extends Model
     use HasFactory;
 
     protected $primaryKey = 'pet_image_id';
-    public $incrementing = false;
 
     protected $fillable = [
         'pet_id',

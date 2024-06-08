@@ -32,10 +32,17 @@
                 <div class="card-single h-full bump-up">
                     <a href="{{ route('new-and-post.details', ['id' => $story->story_id]) }}">
                         <div class="bg-black border border-gray-200 rounded-lg shadow h-full">
-                            <img class="rounded-t-lg w-full" src="{{ $story->feature_image_url }}"
-                                alt="{{ $story->title }}" />
+                            @if (file_exists(public_path('storage/images/app/upload' . $story->feature_image_url)))
+                                <img class="rounded-t-lg w-full"
+                                    src="{{ asset('storage/images/' . $story->feature_image_url) }}"
+                                    alt="{{ $story->title }}" />
+                            @else
+                                <img class="rounded-t-lg w-full" src="{{ asset('storage/images/default.jpg') }}"
+                                    alt="Default Image" />
+                            @endif
                             <div class="p-5">
-                                <h2 class="mb-2 text-2xl font-bold tracking-tight text-white max-content-3">{{ $story->title }}
+                                <h2 class="mb-2 text-2xl font-bold tracking-tight text-white max-content-3">
+                                    {{ $story->title }}
                                 </h2>
                                 <p class="mb-3 font-normal text-slate-300 max-content-3">{{ $story->content }}</p>
                                 <div class="flex justify-between">

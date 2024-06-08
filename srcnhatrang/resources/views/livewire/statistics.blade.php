@@ -40,6 +40,18 @@
                     @endforeach
                 </select>
             </div>
+
+            <div class="w-full md:col-span-2">
+                <label for="fund" class="block mb-2 text-sm font-medium text-gray-900">Quỹ</label>
+                <select id="fund"
+                    class="w-full flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-left text-white bg-black border border-primary-100 rounded-lg focus:ring-2 focus:outline-none focus:ring-primary-100"
+                    wire:model.live="fund">
+                    <option value="">Tất cả</option>
+                    @foreach ($funds as $fund)
+                        <option value="{{ $fund->fund_id }}">{{ $fund->title }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
         <h2 class="py-5 font-bold">Tất cả</h2>
@@ -62,12 +74,6 @@
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Tổng tiền chi tiêu
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Tổng thú cưng đang ỏ trung tâm
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Tổng thú cưng được nhận nuôi
                             </th>
                         </tr>
                     </thead>
@@ -130,7 +136,11 @@
                                     {{ $moneyAdoption->money_donation_id }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ $moneyAdoption->donor->first_name . ' ' . $moneyAdoption->donor->last_name }}
+                                    @if ($moneyAdoption->donor_id == 'US0000000000')
+                                        Ẩn danh
+                                    @else
+                                        {{ $moneyAdoption->donor->first_name . ' ' . $moneyAdoption->donor->last_name }}
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4">{{ $moneyAdoption->fund->title }}</td>
                                 <td class="px-6 py-4">

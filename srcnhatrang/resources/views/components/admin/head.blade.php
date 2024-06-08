@@ -45,38 +45,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
   <link rel="stylesheet" id="sage/font-css" onload="if(media!='screen')media='screen'" href='@asset("styles/print.scss")' type="text/css" media="print" />
   @vite(['resources/css/admin.scss', 'resources/js/admin.js'])
   @livewireStyles
-  <script>
-    function toggleDarkMode() {
-      var htmlElement = document.querySelector('html');
-      htmlElement.classList.toggle('dark');
-    }
-
-                   // Kiểm tra xem trạng thái dark mode đã được lưu trong Local Storage chưa
-    if (localStorage.getItem('darkMode') === 'true') {
-    // Nếu có, thêm lớp 'dark' vào thẻ html
-    document.documentElement.classList.add('dark');
-    }
-
-    // Hàm để toggle trạng thái dark mode và lưu vào Local Storage
-    function toggleDarkMode() {
-    var htmlElement = document.documentElement;
-    var isDarkMode = htmlElement.classList.toggle('dark');
-    
-    // Lưu trạng thái dark mode vào Local Storage
-    localStorage.setItem('darkMode', isDarkMode);
-    }
-
-    // Kiểm tra sự kiện khi trang được tải
-    window.onload = function() {
-    // Kiểm tra trạng thái dark mode lưu trong Local Storage
-    if (localStorage.getItem('darkMode') === 'true') {
-       // Nếu có, thêm lớp 'dark' vào thẻ html
-       document.documentElement.classList.add('dark');
-    }
-    };
-
- </script>
 </head>

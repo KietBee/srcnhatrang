@@ -16,8 +16,8 @@ class PetAdoptionController extends Controller
     }
 
     public function edit(Request $request, $id) {
-        $petAdoption = PetAdoption::findOrFail($id);
-        return view('page.admin.pet-adoption.edit', compact('petAdoption'));
+        $pet_adoption = PetAdoption::findOrFail($id);
+        return view('page.admin.pet-adoption.edit', compact('pet_adoption'));
     }
 
     public function create(Request $request) { 
@@ -40,10 +40,9 @@ class PetAdoptionController extends Controller
         try {
             $petAdoption = PetAdoption::findOrFail($id);
     
-            $petAdoption->pet_id = $request->pet;
             $petAdoption->title = $request->title;
             $petAdoption->description = $request->description;
-            $petAdoption->updated_by = Auth::user()->id;
+            $petAdoption->created_by = Auth::user()->id;
     
             $petAdoption->save();
     

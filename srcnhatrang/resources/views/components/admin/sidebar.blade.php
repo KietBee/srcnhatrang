@@ -10,7 +10,7 @@
                <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
             </svg>
         </button>
-        <a href="https://flowbite.com" class="flex ms-2 xl:me-24">
+        <a href="{{ route('home') }}" class="flex ms-2 xl:me-24">
           <img class="h-8 me-3 dark:hidden" src="{{ asset('images/logo-green.svg') }}" alt="" >
           <img class="h-8 me-3 hidden dark:block" src="{{ asset('images/logo-dashboard.svg') }}" alt="" >
           <span class="self-center text-xl font-semibold xl:text-2xl whitespace-nowrap dark:text-white">SRC Nha Trang</span>
@@ -18,19 +18,6 @@
       </div>
       <div class="flex items-center">
         <div class="flex items-center gap-8">
-          <div>
-            <button onclick="toggleDarkMode()"
-              class="h-5 w-5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-              <svg class="fill-violet-700 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-              </svg>
-              <svg class="fill-yellow-500 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                      d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                      fill-rule="evenodd" clip-rule="evenodd"></path>
-              </svg>
-            </button>
-          </div>
           <div class="flex gap-3 items-center">
             <span class="hidden text-right lg:block">
               <span class="block text-sm font-medium text-black dark:text-white">{{ Auth::user()->first_name.' '. Auth::user()->last_name }}</span>
@@ -38,7 +25,7 @@
             </span>
             <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <span class="sr-only">Open user menu</span>
-              <img class="w-8 h-8 rounded-full" src="{{ asset('images/user.jpg') }}" alt="user photo">
+              <img class="w-8 h-8 rounded-full" src="{{ asset('storage/images/user.jpg') }}" alt="user photo">
             </button>
           </div>
           <div class="hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
@@ -52,21 +39,12 @@
             </div>
             <ul class="py-1" role="none">
               <li>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
-              </li>
-              <li>
                 <form method="POST" action="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">
                   @csrf
                   <x-responsive-nav-link :href="route('logout')"
                           onclick="event.preventDefault();
                                       this.closest('form').submit();">
-                      {{ __('Log out') }}
+                      {{ __('Đăng xuất') }}
                   </x-responsive-nav-link>
               </form>
               </li>

@@ -23,7 +23,7 @@ class QA {
         if (confirm('Bạn có chắc chắn muốn xóa bản ghi này không?')) {
             var csrfToken = $('meta[name="csrf-token"]').attr('content')
             $.ajax({
-                url: '/QA/' + QAID,
+                url: '/admin/QA/' + QAID,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken

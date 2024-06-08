@@ -89,12 +89,20 @@
                 <div class="card-single h-full bump-up">
                     <a href="{{ route('pet-adoptions.details', ['id' => $petAdoptions->pet_adoption_id]) }}">
                         <div class="bg-black border border-gray-200 rounded-lg shadow h-full">
-                            <img class="rounded-t-lg w-full" src="{{ $petAdoptions->image_feature }}"
-                                alt="{{ $petAdoptions->title }}" />
+                            @if (file_exists(public_path('storage/images/app/upload' . $petAdoptions->image_feature)))
+                                <img class="rounded-t-lg w-full"
+                                    src="{{ asset('storage/images/' . $petAdoptions->image_feature) }}"
+                                    alt="{{ $petAdoptions->title }}" />
+                            @else
+                                <img class="rounded-t-lg w-full" src="{{ asset('storage/images/default.jpg') }}"
+                                    alt="Default Image" />
+                            @endif
                             <div class="p-5">
-                                <h2 class="mb-2 text-2xl font-bold tracking-tight text-white max-content-3">{{ $petAdoptions->title }}
+                                <h2 class="mb-2 text-2xl font-bold tracking-tight text-white max-content-3">
+                                    {{ $petAdoptions->title }}
                                 </h2>
-                                <p class="mb-3 font-normal text-slate-300 max-content-3">{{ $petAdoptions->description }}</p>
+                                <p class="mb-3 font-normal text-slate-300 max-content-3">
+                                    {{ $petAdoptions->description }}</p>
                                 <p class="mb-3 font-normal text-slate-300">{{ $petAdoptions->created_at }}</p>
                                 <a href="{{ route('pet-adoptions.details', ['id' => $petAdoptions->pet_adoption_id]) }}"
                                     class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-100 rounded-lg hover:bg-primary-900 focus:ring-4 focus:outline-none focus:ring-blue-300">

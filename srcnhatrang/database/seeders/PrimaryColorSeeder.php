@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
 
 class PrimaryColorSeeder extends Seeder
 {
@@ -15,35 +14,34 @@ class PrimaryColorSeeder extends Seeder
      */
     public function run(): void
     {
-        $date = Carbon::now()->format('dm');
         DB::table('primary_colors')->insert([
             [
-                'primary_color_ID' => 'PCBL'.$date,
-                'primary_color_name' => 'Black',
+                'primary_color_id' => 'PR'.rand(10000000, 99999999),
+                'primary_color_name' => 'Đen',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'primary_color_ID' => 'PCWH'.$date,
-                'primary_color_name' => 'White',
+                'primary_color_id' => 'PR'.rand(10000000, 99999999),
+                'primary_color_name' => 'Trắng',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'primary_color_ID' => 'PCBR'.$date,
-                'primary_color_name' => 'Brown',
+                'primary_color_id' => 'PR'.rand(10000000, 99999999),
+                'primary_color_name' => 'Nâu',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'primary_color_ID' => 'PCGR'.$date,
-                'primary_color_name' => 'Grey',
+                'primary_color_id' => 'PR'.rand(10000000, 99999999),
+                'primary_color_name' => 'Xám',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'primary_color_ID' => 'PCOR'.$date,
-                'primary_color_name' => 'Orange',
+                'primary_color_id' => 'PR'.rand(10000000, 99999999),
+                'primary_color_name' => 'Cam',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

@@ -29,7 +29,7 @@ class AgeSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'age_ID' => 'AG1430472705',
+                'age_ID' => 'AG1440472705',
                 'description' => 'Trên 6 năm tuổi',
                 'created_at' => now(),
                 'updated_at' => now(),

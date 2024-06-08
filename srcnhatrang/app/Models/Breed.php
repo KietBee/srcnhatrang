@@ -21,6 +21,11 @@ class Breed extends Model
 
     public function specie()
     {
-        return $this->hasMany(Specie::class, 'specie_id', 'specie_id');
+        return $this->belongsTo(Specie::class, 'specie_id', 'specie_id');
+    }
+
+    public function pet()
+    {
+        return $this->hasMany(Pet::class,  'breed_id');
     }
 }

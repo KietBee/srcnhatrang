@@ -14,8 +14,8 @@
         <img class="absolute w-full h-full inset-0" src="https://images.unsplash.com/photo-1577495508048-b635879837f1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80" alt="">
         <div class="absolute bg-black  w-full h-full opacity-60 inset-0 z-0"></div>
         <div class="w-full px-24 z-10">
-            <h1 class="text-5xl font-bold text-left tracking-wide">Keep it special</h1>
-            <p class="text-3xl my-4">Capture your personal memory in unique way, anywhere.</p>
+            <h1 class="text-5xl font-bold text-left tracking-wide">Một món quà nhỏ</h1>
+            <p class="text-3xl my-4">Cho đi là gắn kết. Cho đi là còn mãi.</p>
         </div>
         <div class="bottom-0 absolute p-4 text-center right-0 left-0 flex justify-center space-x-4">
             <span>
@@ -131,7 +131,7 @@
                         <span class="ms-2 text-sm text-gray-600">{{ __('Đồng ý với chính sách và điều khoản của chúng tôi') }}</span>
                     </label>
                   </div>   
-                  <button type="submit" class="col-span-2 text-white font-medium block w-full p-2 text-base rounded-full bg-primary-500 hover:bg-primary-600 focus:outline-none">Đăng ký</button>            
+                  <button type="submit" class="col-span-2 text-white font-medium block w-full p-2 text-base rounded-full bg-primary-100 hover:bg-primary-600 focus:outline-none">Đăng ký</button>            
                 </div>
 
                 <p class="text-sm mt-6 text-center">Bạn đã có tài khoản? <a href="{{ route('login') }}" class="text-blue-600 font-semibold hover:underline ml-1">Đăng nhập tại đây</a></p>
