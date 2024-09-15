@@ -20,13 +20,6 @@ use App\Http\Controllers\Client\FeedbacksController;
 
 Route::get('districts/{province_id}', [AddressController::class, 'getDistricts'])->name('districts');
 Route::get('wards/{district_id}', [AddressController::class, 'getWards'])->name('wards');
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-// Route::get('post', [DashBoardController::class, 'post']);
-// dd(Route::get('post', [DashBoardController::class, 'post'])->middleware(['auth', 'admin']));
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/new-and-post', [StoryController::class, 'index'])->name('new-and-post');
 Route::get('new-and-post/{id}', [StoryController::class, 'details'])->name('new-and-post.details');
