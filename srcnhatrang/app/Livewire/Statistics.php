@@ -53,8 +53,6 @@ class Statistics extends Component
     {
         sleep(1);
 
-        $this->checkAndCreateStatistic();
-
         $litsStatistics = Statistic::query()
             ->when($this->year, function ($query) {
                 $query->where('year', $this->year);
